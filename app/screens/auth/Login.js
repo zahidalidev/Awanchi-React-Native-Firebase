@@ -104,7 +104,7 @@ function Login(props) {
 
             {/* Text feilds */}
             {feilds.map((item, i) =>
-                <View key={i} style={{ marginTop: i == 0 ? RFPercentage(6) : RFPercentage(6), width: "100%" }} >
+                <View key={i} style={{ marginTop: i == 0 ? RFPercentage(8) : RFPercentage(5), width: "100%" }} >
                     <AppTextInput
                         placeHolder={item.placeHolder}
                         width="100%"
@@ -116,7 +116,7 @@ function Login(props) {
             )}
 
             {/* Login button */}
-            <View style={{ width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
+            <View style={{ width: "100%", marginTop: RFPercentage(7), justifyContent: 'center', alignItems: 'center' }} >
                 <AppTextButton
                     name="LOGIN"
                     borderRadius={RFPercentage(1.3)}
@@ -128,7 +128,7 @@ function Login(props) {
             </View>
 
             {/* Login text */}
-            <AccountText navigate={props.navigation.navigate} description="Dont't have an account? " buttnText="Sign Up" location="LoginScreen" />
+            {/* <AccountText navigate={props.navigation.navigate} description="Dont't have an account? " buttnText="Sign Up" location="LoginScreen" /> */}
         </View>
     );
 }
