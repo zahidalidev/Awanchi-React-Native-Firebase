@@ -74,18 +74,18 @@ function Login(props) {
         try {
             let res = await AsyncStorage.getItem('user');
             if (res) {
-                if (res.role === 'admin') {
-                    props.navigation.navigate('adminScreen')
-                } else if (res.role === 'rider') {
-                    props.navigation.navigate('riderScreen')
-                } else if (res.role === 'restaurant') {
-                    props.navigation.navigate('resturentScreen')
-                } else {
-                    props.navigation.navigate('homeScreen')
-                }
+                // if (res.role === 'admin') {
+                //     props.navigation.navigate('adminScreen')
+                // } else if (res.role === 'rider') {
+                //     props.navigation.navigate('riderScreen')
+                // } else if (res.role === 'restaurant') {
+                //     props.navigation.navigate('resturentScreen')
+                // } else {
+                //     props.navigation.navigate('homeScreen')
+                // }
                 return;
             }
-            props.navigation.navigate('loginScreen');
+            // props.navigation.navigate('LoginScreen');
         } catch (error) {
             console.log("auto login: ", error)
         }
