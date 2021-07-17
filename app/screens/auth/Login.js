@@ -12,7 +12,7 @@ import AccountText from "../../components/commom/AccountText"
 import Colors from '../../config/Colors';
 
 function Login(props) {
-    const [indicator, showIndicator] = useState(false);
+    const [indicator, setIndicator] = useState(false);
 
     const [feilds, setFeilds] = useState([
         {
@@ -43,12 +43,12 @@ function Login(props) {
 
             const res = '';
             // const res = await loginUser(email, password);
-            if (!res) {
-                setIndicator(false)
-                alert("Email or Password is incorrect")
-                return;
-            }
-            await AsyncStorage.setItem('user', JSON.stringify(res));
+            // if (!res) {
+            //     setIndicator(false)
+            //     alert("Email or Password is incorrect")
+            // return;
+            // }
+            // await AsyncStorage.setItem('user', JSON.stringify(res));
             setIndicator(false)
 
             // if (res.role === 'admin') {
@@ -60,6 +60,7 @@ function Login(props) {
             // } else {
             //     props.navigation.navigate('homeScreen')
             // }
+            props.navigation.navigate('User')
 
         } catch (error) {
             console.log("login error: ", error);
