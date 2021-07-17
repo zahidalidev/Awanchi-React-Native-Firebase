@@ -65,7 +65,6 @@ function UserDashboard(props) {
     return (
         <View>
             <AppBar {...props} title="Dashboard" />
-
             <View style={styles.container} >
                 <FlatList
                     style={{ width: "85%", marginTop: RFPercentage(5) }}
