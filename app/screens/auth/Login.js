@@ -1,0 +1,145 @@
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RFPercentage } from 'react-native-responsive-fontsize';
+
+// components
+import AppTextInput from "../../components/commom/AppTextInput"
+import AppTextButton from "../../components/commom/AppTextButton"
+import AccountText from "../../components/commom/AccountText"
+
+// config
+import Colors from '../../config/Colors';
+
+function Login(props) {
+    const [indicator, showIndicator] = useState(false);
+
+    const [feilds, setFeilds] = useState([
+        {
+            id: 0,
+            placeHolder: "Email",
+            value: '',
+            secure: false
+        },
+        {
+            id: 1,
+            placeHolder: "Password",
+            value: '',
+            secure: true
+        },
+    ]);
+
+    const handleChange = (text, id) => {
+        const tempFeilds = [...feilds];
+        tempFeilds[id].value = text;
+        setFeilds(tempFeilds);
+    }
+
+    const handleSubmit = async () => {
+        const email = feilds[0].value.trim().toLowerCase();
+        const password = feilds[1].value;
+        try {
+            setIndicator(true)
+
+            const res = '';
+            // const res = await loginUser(email, password);
+            if (!res) {
+                setIndicator(false)
+                alert("Email or Password is incorrect")
+                return;
+            }
+            await AsyncStorage.setItem('user', JSON.stringify(res));
+            setIndicator(false)
+
+            // if (res.role === 'admin') {
+            //     props.navigation.navigate('adminScreen')
+            // } else if (res.role === 'rider') {
+            //     props.navigation.navigate('riderScreen')
+            // } else if (res.role === 'restaurant') {
+            //     props.navigation.navigate('resturentScreen')
+            // } else {
+            //     props.navigation.navigate('homeScreen')
+            // }
+
+        } catch (error) {
+            console.log("login error: ", error);
+            setIndicator(false)
+            alert("Email or Password is incorrect")
+        }
+    }
+
+    // get user from AsyncStorage to confirm login or logout
+    let validateCurrentUser = async () => {
+        // await AsyncStorage.removeItem('user');
+        try {
+            let res = await AsyncStorage.getItem('user');
+            if (res) {
+                if (res.role === 'admin') {
+                    props.navigation.navigate('adminScreen')
+                } else if (res.role === 'rider') {
+                    props.navigation.navigate('riderScreen')
+                } else if (res.role === 'restaurant') {
+                    props.navigation.navigate('resturentScreen')
+                } else {
+                    props.navigation.navigate('homeScreen')
+                }
+                return;
+            }
+            props.navigation.navigate('loginScreen');
+        } catch (error) {
+            console.log("auto login: ", error)
+        }
+    }
+
+    useEffect(() => {
+        validateCurrentUser();
+    }, []);
+
+    return (
+        <View style={styles.container}>
+            <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
+                <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.5) : RFPercentage(5) }} >Hello!</Text>
+                <Text style={{ color: Colors.grey, fontSize: Platform.OS === "ios" ? RFPercentage(2) : RFPercentage(2.6) }} >Login to continue </Text>
+            </View>
+
+            {/* Text feilds */}
+            {feilds.map((item, i) =>
+                <View key={i} style={{ marginTop: i == 0 ? RFPercentage(6) : RFPercentage(6), width: "100%" }} >
+                    <AppTextInput
+                        placeHolder={item.placeHolder}
+                        width="100%"
+                        value={item.value}
+                        onChange={(text) => handleChange(text, item.id)}
+                        secure={item.secure}
+                    />
+                </View>
+            )}
+
+            {/* Login button */}
+            <View style={{ width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
+                <AppTextButton
+                    name="LOGIN"
+                    borderRadius={RFPercentage(1.3)}
+                    onSubmit={() => handleSubmit()}
+                    backgroundColor={Colors.primary}
+                    width="80%"
+                    height={RFPercentage(5.5)}
+                />
+            </View>
+
+            {/* Login text */}
+            <AccountText navigate={props.navigation.navigate} description="Dont't have an account? " buttnText="Sign Up" location="LoginScreen" />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: "90%",
+        justifyContent: "center",
+        alignItems: "center"
+    }
+})
+
+export default Login;

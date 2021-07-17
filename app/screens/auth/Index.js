@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import {
-    ActivityIndicator, StatusBar, StyleSheet, Text, View, TouchableOpacity, Animated, ScrollView, Dimensions
+    StatusBar, StyleSheet, Text, View, TouchableOpacity, Animated, ScrollView, Dimensions
 } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
 // components
+import Login from './Login';
+import SignUp from './SignUp';
 
 // config
 import Colors from "../../config/Colors"
+
 
 const { width } = Dimensions.get("window");
 
 function Index(props) {
 
-    const [indicator, showIndicator] = useState(false);
     const [active, setActive] = useState(0);
     const [xTabOne, setXTabOne] = useState(0);
     const [xTabTwo, setXTabTwo] = useState(0);
@@ -68,49 +70,42 @@ function Index(props) {
                 </Text>
             </View>
 
-            {indicator
-                ? <View style={{ marginTop: -RFPercentage(5), borderTopRightRadius: RFPercentage(5), borderTopLeftRadius: RFPercentage(5), backgroundColor: Colors.lightGrey, width: "100%", flex: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                    <ActivityIndicator color={Colors.primary} size={RFPercentage(6)} />
-                </View>
-                : <>
-                    {/* Bottom Contaienr */}
-                    <View style={{ marginTop: -RFPercentage(5), borderTopRightRadius: RFPercentage(5), borderTopLeftRadius: RFPercentage(5), backgroundColor: Colors.lightGrey, width: "100%", flex: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                        <View style={{ width: "70%", justifyContent: 'flex-start', flex: 1 }}>
+            {/* Bottom Contaienr */}
+            <View style={{ marginTop: -RFPercentage(5), borderTopRightRadius: RFPercentage(5), borderTopLeftRadius: RFPercentage(5), backgroundColor: Colors.lightGrey, width: "100%", flex: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
+                <View style={{ width: "100%", justifyContent: 'flex-start', flex: 1, justifyContent: 'center', alignItems: "center" }}>
 
-                            {/* Tabs */}
-                            <View style={{ flexDirection: "row", height: RFPercentage(5), marginTop: RFPercentage(3) }}>
-                                <Animated.View style={{ position: "absolute", width: "50%", height: "100%", top: 0, left: 0, backgroundColor: Colors.primary, borderRadius: 4, transform: [{ translateX }] }} />
-                                <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", borderRadius: 4, borderRightWidth: 0, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                                    onLayout={event => setXTabOne(event.nativeEvent.layout.x)} onPress={() => { setActive(0); handleSlide(xTabOne) }}
-                                >
-                                    <Text style={{ fontSize: RFPercentage(2.2), color: active === 0 ? Colors.white : Colors.primary }}>
-                                        Login
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", borderRadius: 4, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                                    onLayout={event => { setXTabTwo(event.nativeEvent.layout.x) }} onPress={() => { setActive(1); handleSlide(xTabTwo) }}
-                                >
-                                    <Text style={{ fontSize: RFPercentage(2.2), color: active === 1 ? Colors.white : Colors.primary }}>
-                                        Sign Up
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            {/* Login and Sign Up Container */}
-                            <ScrollView style={{ marginTop: RFPercentage(4) }} >
-                                <Animated.View style={{ justifyContent: "center", alignItems: "center", transform: [{ translateX: translateXTabOne }] }} onLayout={event => setTranslateY(event.nativeEvent.layout.height)}>
-                                    <Text>Hi, I am a Login</Text>
-                                </Animated.View>
-
-                                <Animated.View style={{ justifyContent: "center", alignItems: "center", transform: [{ translateX: translateXTabTwo }, { translateY: -translateY }] }}>
-                                    <Text>Hi, I am a SignUp</Text>
-                                </Animated.View>
-                            </ScrollView>
-                        </View>
-
+                    {/* Tabs */}
+                    <View style={{ width: "70%", flexDirection: "row", height: RFPercentage(5), marginTop: RFPercentage(3) }}>
+                        <Animated.View style={{ position: "absolute", width: "50%", height: "100%", top: 0, left: 0, backgroundColor: Colors.primary, borderRadius: 4, transform: [{ translateX }] }} />
+                        <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", borderRadius: 4, borderRightWidth: 0, borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                            onLayout={event => setXTabOne(event.nativeEvent.layout.x)} onPress={() => { setActive(0); handleSlide(xTabOne) }}
+                        >
+                            <Text style={{ fontSize: RFPercentage(2.2), color: active === 0 ? Colors.white : Colors.primary }}>
+                                Login
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, justifyContent: "center", alignItems: "center", borderRadius: 4, borderLeftWidth: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                            onLayout={event => { setXTabTwo(event.nativeEvent.layout.x) }} onPress={() => { setActive(1); handleSlide(xTabTwo) }}
+                        >
+                            <Text style={{ fontSize: RFPercentage(2.2), color: active === 1 ? Colors.white : Colors.primary }}>
+                                Sign Up
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                </>
-            }
+
+                    {/* Login and Sign Up Container */}
+                    <ScrollView style={{ marginTop: RFPercentage(4) }} >
+                        <Animated.View style={{ justifyContent: "center", alignItems: "center", transform: [{ translateX: translateXTabOne }] }} onLayout={event => setTranslateY(event.nativeEvent.layout.height)}>
+                            <SignUp {...props} />
+                        </Animated.View>
+
+                        <Animated.View style={{ justifyContent: "center", alignItems: "center", transform: [{ translateX: translateXTabTwo }, { translateY: -translateY }] }}>
+                            <Login {...props} />
+                        </Animated.View>
+                    </ScrollView>
+                </View>
+
+            </View>
         </View>
     );
 }
