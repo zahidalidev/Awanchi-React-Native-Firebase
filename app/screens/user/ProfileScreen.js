@@ -100,7 +100,7 @@ function ProfileScreen(props) {
                             name="Share Holder"
                             textStyle={{ fontSize: RFPercentage(2) }}
                             height={RFPercentage(5)}
-                            onSubmit={() => console.log("share")}
+                            onSubmit={() => props.navigation.navigate('ShareHolderPhotos')}
                         />
                     </View>
                 </View>
