@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 // components
 import AppBar from '../../components/AppBar';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Colors from '../../config/Colors';
 import AppTextButton from '../../components/commom/AppTextButton';
+
+// config
+import Colors from '../../config/Colors';
 
 function ShareHolderPhotos(props) {
     const [cnicFront, setCnicFront] = useState(false)
