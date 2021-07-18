@@ -59,7 +59,7 @@ function ShareHolderInfo(props) {
     }
 
     const handleSubmit = () => {
-
+        props.navigation.navigate('ProfileScreen')
     }
 
     return (
