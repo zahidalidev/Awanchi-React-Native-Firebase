@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import * as ImagePicker from 'expo-image-picker';
+
+// components
 import AppBar from '../../components/AppBar';
 import AppTextButton from '../../components/commom/AppTextButton';
+
+// config
 import Colors from '../../config/Colors';
 
 function ProfileScreen(props) {
 
+    const [profileImage, setProfileImage] = useState(false)
     const [skills, setSkills] = useState([
         {
             id: 0,
@@ -46,14 +52,41 @@ function ProfileScreen(props) {
         },
     ])
 
+    const uploadImages = async (evetnType) => {
+        try {
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+            if (permissionResult.granted === false) {
+                alert("Permission to access camera roll is required!");
+                return;
+            }
+
+            let pickerResult = await ImagePicker.launchImageLibraryAsync({
+                // allowsEditing: true,
+                quality: 0.6
+            });
+
+            const { height, width, type, uri } = pickerResult;
+
+            setProfileImage(uri)
+        } catch (error) {
+
+        }
+    }
+
+
     return (
         <View>
             <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
             <View style={styles.container}>
                 {/* Image container */}
                 <View style={{ marginTop: RFPercentage(4) }} >
-                    <TouchableOpacity activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
-                        <Text style={{ fontSize: RFPercentage(3.5), color: Colors.grey }} >Upload</Text>
+                    <TouchableOpacity onPress={() => uploadImages()} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
+                        {profileImage ?
+                            <Image width={RFPercentage(23)} height={RFPercentage(23)} style={{ width: RFPercentage(23), height: RFPercentage(23), borderRadius: 10 }} source={{ uri: profileImage }} /> :
+                            <Text style={{ fontSize: RFPercentage(3.5), color: Colors.grey }} >Upload</Text>
+                        }
                     </TouchableOpacity>
                 </View>
 
