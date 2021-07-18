@@ -6,6 +6,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer"
 // screens
 import LoginScreen from "./app/screens/auth/Index"
 import UserDashboard from './app/screens/user/UserDashboard';
+import ProfileScreen from './app/screens/user/ProfileScreen';
+
+// components
 import AppDrawer from './app/components/AppDrawer';
 
 // config
@@ -20,11 +23,10 @@ export default function App() {
       drawerType={"front"}
       overlayColor="transparent"
       edgeWidth={100}
-      drawerStyle={{
-        backgroundColor: Colors.white,
-        width: "75%"
-      }} drawerContent={(props) => <AppDrawer {...props} />} >
+      drawerStyle={{ backgroundColor: Colors.white, width: "75%" }}
+      drawerContent={(props) => <AppDrawer {...props} />} >
       <Drawer.Screen name="UserDashboard" component={UserDashboard} />
+      <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
     </Drawer.Navigator>
   }
 
