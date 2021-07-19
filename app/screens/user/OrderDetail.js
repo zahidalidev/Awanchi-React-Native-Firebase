@@ -24,9 +24,9 @@ function OrderDetail(props) {
             <AppBar {...props} menu={false} title="Order Detail" backAction={"UserDashboard"} />
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(4) }} >
-                    <TouchableOpacity activeOpacity={1} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
+                    <TouchableOpacity activeOpacity={1} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(30), height: RFPercentage(30), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
                         {profileImage ?
-                            <Image resizeMode="contain" width={RFPercentage(23)} height={RFPercentage(23)} style={{ width: RFPercentage(23), height: RFPercentage(23), borderRadius: 10 }} source={{ uri: profileImage }} /> :
+                            <Image resizeMode="contain" width={RFPercentage(30)} height={RFPercentage(30)} style={{ width: RFPercentage(30), height: RFPercentage(30), borderRadius: 10 }} source={{ uri: profileImage }} /> :
                             <Text style={{ fontSize: RFPercentage(3.5), color: Colors.grey }} >Empty</Text>
                         }
                     </TouchableOpacity>
