@@ -9,6 +9,8 @@ import UserDashboard from './app/screens/user/UserDashboard';
 import ProfileScreen from './app/screens/user/ProfileScreen';
 import ShareHolderPhotos from './app/screens/user/ShareHolderPhotos';
 import ShareHolderInfo from './app/screens/user/ShareHolderInfo';
+import FakeOrders from './app/screens/user/FakeOrders';
+import OrganicOrders from './app/screens/user/OrganicOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -33,6 +35,8 @@ export default function App() {
       <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
       <Drawer.Screen name="ShareHolderPhotos" component={ShareHolderPhotos} />
       <Drawer.Screen name="ShareHolderInfo" component={ShareHolderInfo} />
+      <Drawer.Screen name="FakeOrders" component={FakeOrders} />
+      <Drawer.Screen name="OrganicOrders" component={OrganicOrders} />
     </Drawer.Navigator>
   }
 

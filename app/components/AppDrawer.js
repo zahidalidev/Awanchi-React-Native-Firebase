@@ -44,18 +44,17 @@ function AppDrawer({ navigation }) {
                         icon="alpha-o-circle-outline"
                         // active={active === 'second'}
                         onPress={() => {
-                            navigation.navigate('ProfileScreen')
-                            setActive('ProfileScreen')
+                            navigation.navigate('OrganicOrders')
+                            // setActive('ProfileScreen')
                         }}
                     />
                     <Drawer.Item
-                        style={{ marginTop: RFPercentage(-1) }}
                         label="Fake Orders"
                         icon="alpha-f-circle-outline"
                         // active={active === 'second'}
                         onPress={() => {
-                            navigation.navigate('ProfileScreen')
-                            setActive('ProfileScreen')
+                            navigation.navigate('FakeOrders')
+                            // setActive('ProfileScreen')
                         }}
                     />
                 </View> : null

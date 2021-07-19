@@ -79,8 +79,8 @@ function ProfileScreen(props) {
     return (
         <View>
             <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
+            {/* Image container */}
             <View style={styles.container}>
-                {/* Image container */}
                 <View style={{ marginTop: RFPercentage(4) }} >
                     <TouchableOpacity onPress={() => uploadImages()} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
                         {profileImage ?
