@@ -12,6 +12,7 @@ import ShareHolderInfo from './app/screens/user/ShareHolderInfo';
 import FakeOrders from './app/screens/user/FakeOrders';
 import OrganicOrders from './app/screens/user/OrganicOrders';
 import OrderDetail from './app/screens/user/OrderDetail';
+import AddOrganicOrders from './app/screens/user/AddOrganicOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -39,6 +40,7 @@ export default function App() {
       <Drawer.Screen name="FakeOrders" component={FakeOrders} />
       <Drawer.Screen name="OrganicOrders" component={OrganicOrders} />
       <Drawer.Screen name="OrderDetail" component={OrderDetail} />
+      <Drawer.Screen name="AddOrganicOrders" component={AddOrganicOrders} />
     </Drawer.Navigator>
   }
 

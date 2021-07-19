@@ -21,7 +21,7 @@ function OrderDetail(props) {
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
-            <AppBar {...props} menu={false} title="Order Detail" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Order Detail" backAction={"OrganicOrders"} />
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(4) }} >
                     <TouchableOpacity activeOpacity={1} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(30), height: RFPercentage(30), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >

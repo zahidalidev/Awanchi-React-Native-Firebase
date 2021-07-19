@@ -45,7 +45,7 @@ function OrganicOrders(props) {
     ])
 
     const handleAddOrganicOrder = () => {
-
+        props.navigation.navigate('AddOrganicOrders')
     }
 
     return (
