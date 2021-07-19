@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { FlatList, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 // components
-import AppBar from '../../components/AppBar';
-import AppTextButton from '../../components/commom/AppTextButton';
+import AppBar from '../../../components/AppBar';
+import AppTextButton from '../../../components/commom/AppTextButton';
 
 // config
-import Colors from '../../config/Colors';
+import Colors from '../../../config/Colors';
 
-function OrganicOrders(props) {
+function FakeOrders(props) {
 
     const [organicOrders, setOrganicOrders] = useState([
         {
@@ -45,12 +45,12 @@ function OrganicOrders(props) {
     ])
 
     const handleAddOrganicOrder = () => {
-        props.navigation.navigate('AddOrganicOrders')
+        props.navigation.navigate('AddFakeOrders')
     }
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
-            <AppBar {...props} menu={false} title="Organic Orders" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Fake Orders" backAction={"UserDashboard"} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (
@@ -63,7 +63,7 @@ function OrganicOrders(props) {
                     {/* Add Order button */}
                     <View style={{ marginBottom: RFPercentage(4), width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
                         <AppTextButton
-                            name="Add Organic Order"
+                            name="Add Fake Order"
                             borderRadius={RFPercentage(1.3)}
                             onSubmit={() => handleAddOrganicOrder()}
                             backgroundColor={Colors.primary}
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default OrganicOrders;
+export default FakeOrders;

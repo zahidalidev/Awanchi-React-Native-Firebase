@@ -5,14 +5,14 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 // components
-import AppBar from '../../components/AppBar';
-import AppTextButton from '../../components/commom/AppTextButton';
-import AppTextInput from '../../components/commom/AppTextInput';
+import AppBar from '../../../components/AppBar';
+import AppTextButton from '../../../components/commom/AppTextButton';
+import AppTextInput from '../../../components/commom/AppTextInput';
 
 // config
-import Colors from '../../config/Colors';
+import Colors from '../../../config/Colors';
 
-function AddOrganicOrders(props) {
+function AddFakeOrders(props) {
 
     const [indicator, setIndicator] = useState(false);
     const [orderImage, setOrderImage] = useState(false)
@@ -65,12 +65,12 @@ function AddOrganicOrders(props) {
     }
 
     const handleAddOrganicOrder = () => {
-        // props.navigation.navigate('AddOrganicOrders')
+        // props.navigation.navigate('AddFakeOrders')
     }
 
     return (
         <View style={{ flex: 1 }} >
-            <AppBar {...props} menu={false} title="Organic Orders" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Add Fake Orders" backAction={"FakeOrders"} />
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Order Details</Text>
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AddOrganicOrders;
+export default AddFakeOrders;

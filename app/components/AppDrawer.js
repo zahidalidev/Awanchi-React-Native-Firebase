@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Divider, Drawer } from "react-native-paper";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 
 import Colors from "../config/Colors";
+
+const height = Dimensions.get('window').height;
 
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
@@ -60,6 +62,16 @@ function AppDrawer({ navigation }) {
                 </View> : null
 
             }
+            <View style={{ position: 'absolute', width: '80%', marginLeft: RFPercentage(6), marginTop: height - 100, }} >
+                <Drawer.Item
+                    label="Logout"
+                    icon="import"
+                    // active={active === 'second'}
+                    onPress={() => {
+                        navigation.navigate('LoginScreen')
+                    }}
+                />
+            </View>
         </Drawer.Section>
     );
 }

@@ -9,10 +9,11 @@ import UserDashboard from './app/screens/user/UserDashboard';
 import ProfileScreen from './app/screens/user/ProfileScreen';
 import ShareHolderPhotos from './app/screens/user/ShareHolderPhotos';
 import ShareHolderInfo from './app/screens/user/ShareHolderInfo';
-import FakeOrders from './app/screens/user/FakeOrders';
-import OrganicOrders from './app/screens/user/OrganicOrders';
+import OrganicOrders from './app/screens/user/organicOrders/OrganicOrders';
+import AddOrganicOrders from './app/screens/user/organicOrders/AddOrganicOrders';
 import OrderDetail from './app/screens/user/OrderDetail';
-import AddOrganicOrders from './app/screens/user/AddOrganicOrders';
+import FakeOrders from './app/screens/user/fakeOrders/FakeOrders';
+import AddFakeOrders from './app/screens/user/fakeOrders/AddFakeOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -26,7 +27,7 @@ const Drawer = createDrawerNavigator()
 export default function App() {
 
   const User = () => {
-    return <Drawer.Navigator initialRouteName="LoginScreen"
+    return <Drawer.Navigator initialRouteName="UserDashboard"
       drawerType={"front"}
       overlayColor="transparent"
       edgeWidth={100}
@@ -41,6 +42,7 @@ export default function App() {
       <Drawer.Screen name="OrganicOrders" component={OrganicOrders} />
       <Drawer.Screen name="OrderDetail" component={OrderDetail} />
       <Drawer.Screen name="AddOrganicOrders" component={AddOrganicOrders} />
+      <Drawer.Screen name="AddFakeOrders" component={AddFakeOrders} />
     </Drawer.Navigator>
   }
 
