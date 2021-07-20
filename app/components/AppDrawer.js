@@ -9,6 +9,7 @@ const height = Dimensions.get('window').height;
 
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
+    const [currentUser, showCurrentUser] = useState('manager');
 
     return (
         <Drawer.Section >
@@ -27,9 +28,21 @@ function AppDrawer({ navigation }) {
                 icon="account"
                 // active={active === 'ProfileScreen'}
                 onPress={() => {
-                    navigation.navigate('ProfileScreen')
+                    navigation.navigate(currentUser === 'manager' ? 'ManagerProfileScreen' : 'ProfileScreen')
                 }}
             />
+
+            {/* for manager */}
+            {currentUser === 'manager' ?
+                <Drawer.Item
+                    label="Employees"
+                    icon="account-multiple"
+                    // active={active === 'ProfileScreen'}
+                    onPress={() => {
+                        navigation.navigate('ProfileScreen')
+                    }}
+                /> : null
+            }
 
             <Drawer.Item
                 label="Orders"
@@ -62,6 +75,8 @@ function AppDrawer({ navigation }) {
                 </View> : null
 
             }
+
+
             <View style={{ position: 'absolute', width: '80%', marginLeft: RFPercentage(6), marginTop: height - 100, }} >
                 <Drawer.Item
                     label="Logout"
