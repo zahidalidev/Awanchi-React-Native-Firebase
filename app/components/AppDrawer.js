@@ -24,6 +24,15 @@ function AppDrawer({ navigation }) {
             </View>
             <Divider />
             <Drawer.Item
+                label="Home"
+                icon="home"
+                // active={active === 'ProfileScreen'}
+                onPress={() => {
+                    navigation.navigate(currentUser === 'manager' ? 'ManagerDashboard' : 'UserDashboard')
+                }}
+            />
+
+            <Drawer.Item
                 label="Profile"
                 icon="account"
                 // active={active === 'ProfileScreen'}

@@ -133,7 +133,7 @@ function ManagerEmployeeProfile(props) {
                                 name="Earning Details"
                                 textStyle={{ fontSize: RFPercentage(2) }}
                                 height={RFPercentage(5)}
-                                onSubmit={() => props.navigation.navigate('ShareHolderPhotos')}
+                                onSubmit={() => props.navigation.navigate('UserDashboard')}
                             />
                         </View>
                     </View>
@@ -143,7 +143,7 @@ function ManagerEmployeeProfile(props) {
                             <Text>Sheraz</Text>
                         </View>
                         <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
-                            <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >CNIC</Text>
+                            <Text style={{ fontSize: RFPercentage(2.5), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >CNIC</Text>
                             <Text>34101-3522327-8</Text>
                         </View>
                     </View>
