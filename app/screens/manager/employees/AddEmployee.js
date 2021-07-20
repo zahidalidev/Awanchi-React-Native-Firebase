@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { MaterialCommunityIcons, Feather } from "@expo/vector-icons"
 
 // components
 import AppBar from '../../../components/AppBar';
