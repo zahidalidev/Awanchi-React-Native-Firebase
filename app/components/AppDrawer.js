@@ -39,7 +39,7 @@ function AppDrawer({ navigation }) {
                     icon="account-multiple"
                     // active={active === 'ProfileScreen'}
                     onPress={() => {
-                        navigation.navigate('ProfileScreen')
+                        navigation.navigate('ManagerEmployees')
                     }}
                 /> : null
             }
