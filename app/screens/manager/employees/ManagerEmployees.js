@@ -60,7 +60,7 @@ function ManagerEmployees(props) {
                                 <TouchableOpacity>
                                     <Feather size={RFPercentage(3)} color={Colors.secondary} name="edit" />
                                 </TouchableOpacity>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => props.navigation.navigate('ManagerEmployeeProfile')} >
                                     <MaterialCommunityIcons size={RFPercentage(3)} color={Colors.secondary} name="eye-outline" />
                                 </TouchableOpacity>
                             </View>

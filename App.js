@@ -20,7 +20,7 @@ import ManagerDashboard from './app/screens/manager/ManagerDashboard';
 import ManagerProfileScreen from './app/screens/manager/ManagerProfileScreen';
 import ManagerEmployees from './app/screens/manager/employees/ManagerEmployees';
 import AddEmployee from './app/screens/manager/employees/AddEmployee';
-
+import ManagerEmployeeProfile from './app/screens/manager/employees/ManagerEmployeeProfile';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -29,10 +29,9 @@ import AppDrawer from './app/components/AppDrawer';
 import Colors from './app/config/Colors';
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator()
+const Drawer = createDrawerNavigator();
 
 export default function App() {
-
   const Login = () => {
     return <Stack.Navigator headerMode="none" initialRouteName="LoginScreen" >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -67,6 +66,7 @@ export default function App() {
         <Drawer.Screen name="ManagerProfileScreen" component={ManagerProfileScreen} />
         <Drawer.Screen name="ManagerEmployees" component={ManagerEmployees} />
         <Drawer.Screen name="AddEmployee" component={AddEmployee} />
+        <Drawer.Screen name="ManagerEmployeeProfile" component={ManagerEmployeeProfile} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
