@@ -22,6 +22,8 @@ import ManagerEmployees from './app/screens/manager/employees/ManagerEmployees';
 import AddEmployee from './app/screens/manager/employees/AddEmployee';
 import ManagerEmployeeProfile from './app/screens/manager/employees/ManagerEmployeeProfile';
 import UpdateEmployee from './app/screens/manager/employees/UpdateEmployee';
+import ManOrganicOrders from './app/screens/manager/organicOrders/ManOrganicOrders';
+import ManAddOrganicOrders from './app/screens/manager/organicOrders/ManAddOrganicOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -69,6 +71,8 @@ export default function App() {
         <Drawer.Screen name="AddEmployee" component={AddEmployee} />
         <Drawer.Screen name="UpdateEmployee" component={UpdateEmployee} />
         <Drawer.Screen name="ManagerEmployeeProfile" component={ManagerEmployeeProfile} />
+        <Drawer.Screen name="ManOrganicOrders" component={ManOrganicOrders} />
+        <Drawer.Screen name="ManAddOrganicOrders" component={ManAddOrganicOrders} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

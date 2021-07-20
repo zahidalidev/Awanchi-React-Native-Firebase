@@ -68,7 +68,7 @@ function AppDrawer({ navigation }) {
                         icon="alpha-o-circle-outline"
                         // active={active === 'second'}
                         onPress={() => {
-                            navigation.navigate('OrganicOrders')
+                            navigation.navigate(currentUser === 'manager' ? 'ManOrganicOrders' : 'OrganicOrders')
                             // setActive('ProfileScreen')
                         }}
                     />
