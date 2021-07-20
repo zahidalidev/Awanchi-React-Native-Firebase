@@ -57,7 +57,7 @@ function ManagerEmployees(props) {
                         <View activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
                             <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.name}</Text>
                             <View style={{ flexDirection: "row", width: "25%", justifyContent: "space-between" }} >
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => props.navigation.navigate('UpdateEmployee')} >
                                     <Feather size={RFPercentage(3)} color={Colors.secondary} name="edit" />
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => props.navigation.navigate('ManagerEmployeeProfile')} >

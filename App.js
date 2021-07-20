@@ -21,6 +21,7 @@ import ManagerProfileScreen from './app/screens/manager/ManagerProfileScreen';
 import ManagerEmployees from './app/screens/manager/employees/ManagerEmployees';
 import AddEmployee from './app/screens/manager/employees/AddEmployee';
 import ManagerEmployeeProfile from './app/screens/manager/employees/ManagerEmployeeProfile';
+import UpdateEmployee from './app/screens/manager/employees/UpdateEmployee';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -66,6 +67,7 @@ export default function App() {
         <Drawer.Screen name="ManagerProfileScreen" component={ManagerProfileScreen} />
         <Drawer.Screen name="ManagerEmployees" component={ManagerEmployees} />
         <Drawer.Screen name="AddEmployee" component={AddEmployee} />
+        <Drawer.Screen name="UpdateEmployee" component={UpdateEmployee} />
         <Drawer.Screen name="ManagerEmployeeProfile" component={ManagerEmployeeProfile} />
       </Drawer.Navigator>
     </NavigationContainer>
