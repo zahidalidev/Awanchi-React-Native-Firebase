@@ -24,6 +24,8 @@ import ManagerEmployeeProfile from './app/screens/manager/employees/ManagerEmplo
 import UpdateEmployee from './app/screens/manager/employees/UpdateEmployee';
 import ManOrganicOrders from './app/screens/manager/organicOrders/ManOrganicOrders';
 import ManAddOrganicOrders from './app/screens/manager/organicOrders/ManAddOrganicOrders';
+import ManUpdateOrganicOrders from './app/screens/manager/organicOrders/ManUpdateOrganicOrders';
+import ManDetailOrganicOrders from './app/screens/manager/organicOrders/ManDetailOrganicOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -43,7 +45,6 @@ export default function App() {
 
   return (
     <NavigationContainer>
-
       <Drawer.Navigator initialRouteName="Login"
         drawerType={"front"}
         overlayColor="transparent"
@@ -73,6 +74,8 @@ export default function App() {
         <Drawer.Screen name="ManagerEmployeeProfile" component={ManagerEmployeeProfile} />
         <Drawer.Screen name="ManOrganicOrders" component={ManOrganicOrders} />
         <Drawer.Screen name="ManAddOrganicOrders" component={ManAddOrganicOrders} />
+        <Drawer.Screen name="ManUpdateOrganicOrders" component={ManUpdateOrganicOrders} />
+        <Drawer.Screen name="ManDetailOrganicOrders" component={ManDetailOrganicOrders} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

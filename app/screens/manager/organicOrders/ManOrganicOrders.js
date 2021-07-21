@@ -50,17 +50,17 @@ function ManOrganicOrders(props) {
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
-            <AppBar {...props} menu={false} title="Organic Orders" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Organic Orders Detail" backAction={"UserDashboard"} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (
                         <View activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
                             <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.name}</Text>
                             <View style={{ flexDirection: "row", width: "25%", justifyContent: "space-between" }} >
-                                <TouchableOpacity onPress={() => props.navigation.navigate('UpdateEmployee')} >
+                                <TouchableOpacity onPress={() => props.navigation.navigate('ManUpdateOrganicOrders')} >
                                     <Feather size={RFPercentage(3)} color={Colors.secondary} name="edit" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => props.navigation.navigate('ManagerEmployeeProfile')} >
+                                <TouchableOpacity onPress={() => props.navigation.navigate('ManDetailOrganicOrders')} >
                                     <MaterialCommunityIcons size={RFPercentage(3)} color={Colors.secondary} name="eye-outline" />
                                 </TouchableOpacity>
                             </View>
