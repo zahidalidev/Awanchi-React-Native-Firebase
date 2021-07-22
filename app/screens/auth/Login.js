@@ -61,7 +61,8 @@ function Login(props) {
             //     props.navigation.navigate('homeScreen')
             // }
             // props.navigation.navigate('User')
-            props.navigation.navigate('ManagerDashboard')
+            // props.navigation.navigate('ManagerDashboard')
+            props.navigation.navigate('AdminDashboard')
 
         } catch (error) {
             console.log("login error: ", error);

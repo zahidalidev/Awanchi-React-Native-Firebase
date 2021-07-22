@@ -9,7 +9,7 @@ const height = Dimensions.get('window').height;
 
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
-    const [currentUser, showCurrentUser] = useState('manager');
+    const [currentUser, showCurrentUser] = useState('admin');
 
     return (
         <Drawer.Section >
@@ -28,7 +28,7 @@ function AppDrawer({ navigation }) {
                 icon="home"
                 // active={active === 'ProfileScreen'}
                 onPress={() => {
-                    navigation.navigate(currentUser === 'manager' ? 'ManagerDashboard' : 'UserDashboard')
+                    navigation.navigate(currentUser === 'manager' ? 'ManagerDashboard' : (currentUser === 'admin' ? 'AdminDashboard' : 'UserDashboard'))
                 }}
             />
 
@@ -37,7 +37,7 @@ function AppDrawer({ navigation }) {
                 icon="account"
                 // active={active === 'ProfileScreen'}
                 onPress={() => {
-                    navigation.navigate(currentUser === 'manager' ? 'ManagerProfileScreen' : 'ProfileScreen')
+                    navigation.navigate(currentUser === 'manager' ? 'ManagerProfileScreen' : (currentUser === 'admin' ? 'AdminProfileScreen' : 'ProfileScreen'))
                 }}
             />
 
@@ -53,14 +53,34 @@ function AppDrawer({ navigation }) {
                 /> : null
             }
 
-            <Drawer.Item
-                label="Orders"
-                icon="basket-fill"
-                // active={active === 'second'}
-                onPress={() => {
-                    showOrderTypes(!orderTypes)
-                }}
-            />
+            {currentUser === 'admin' ?
+                <>
+                    <Drawer.Item
+                        label="Managers"
+                        icon="account-multiple"
+                        // active={active === 'ProfileScreen'}
+                        onPress={() => {
+                            navigation.navigate('ManagerEmployees')
+                        }}
+                    />
+                    <Drawer.Item
+                        label="Employees"
+                        icon="account-multiple"
+                        // active={active === 'ProfileScreen'}
+                        onPress={() => {
+                            navigation.navigate('ManagerEmployees')
+                        }}
+                    />
+                </> : <Drawer.Item
+                    label="Orders"
+                    icon="basket-fill"
+                    // active={active === 'second'}
+                    onPress={() => {
+                        showOrderTypes(!orderTypes)
+                    }}
+                />
+            }
+
             {orderTypes ?
                 <View style={{ marginLeft: RFPercentage(3) }} >
                     <Drawer.Item
