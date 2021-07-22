@@ -77,7 +77,7 @@ function AppDrawer({ navigation }) {
                         icon="alpha-f-circle-outline"
                         // active={active === 'second'}
                         onPress={() => {
-                            navigation.navigate('FakeOrders')
+                            navigation.navigate(currentUser === 'manager' ? 'ManFakeOrders' : 'FakeOrders')
                             // setActive('ProfileScreen')
                         }}
                     />

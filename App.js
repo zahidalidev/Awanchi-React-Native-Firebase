@@ -26,6 +26,10 @@ import ManOrganicOrders from './app/screens/manager/organicOrders/ManOrganicOrde
 import ManAddOrganicOrders from './app/screens/manager/organicOrders/ManAddOrganicOrders';
 import ManUpdateOrganicOrders from './app/screens/manager/organicOrders/ManUpdateOrganicOrders';
 import ManDetailOrganicOrders from './app/screens/manager/organicOrders/ManDetailOrganicOrders';
+import ManAddFakeOrders from './app/screens/manager/fakeOrders/ManAddFakeOrders';
+import ManDetailFakeOrders from './app/screens/manager/fakeOrders/ManDetailFakeOrders';
+import ManFakeOrders from './app/screens/manager/fakeOrders/ManFakeOrders';
+import ManUpdateFakeOrders from './app/screens/manager/fakeOrders/ManUpdateFakeOrders';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -76,6 +80,10 @@ export default function App() {
         <Drawer.Screen name="ManAddOrganicOrders" component={ManAddOrganicOrders} />
         <Drawer.Screen name="ManUpdateOrganicOrders" component={ManUpdateOrganicOrders} />
         <Drawer.Screen name="ManDetailOrganicOrders" component={ManDetailOrganicOrders} />
+        <Drawer.Screen name="ManAddFakeOrders" component={ManAddFakeOrders} />
+        <Drawer.Screen name="ManDetailFakeOrders" component={ManDetailFakeOrders} />
+        <Drawer.Screen name="ManFakeOrders" component={ManFakeOrders} />
+        <Drawer.Screen name="ManUpdateFakeOrders" component={ManUpdateFakeOrders} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
