@@ -38,6 +38,10 @@ import AdminManagerProfile from './app/screens/admin/manager/AdminManagerProfile
 import AdminManagerDashboard from './app/screens/admin/manager/AdminManagerDashboard';
 import AdminAddManager from './app/screens/admin/manager/AdminAddManager';
 import AdminUpdateManager from './app/screens/admin/manager/AdminUpdateManager';
+import AdminEmployees from './app/screens/admin/employees/AdminEmployees';
+import AdminAddEmployee from './app/screens/admin/employees/AdminAddEmployee';
+import AdminEmployeeProfile from './app/screens/admin/employees/AdminEmployeeProfile';
+import AdminUpdateEmployee from './app/screens/admin/employees/AdminUpdateEmployee';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -101,6 +105,10 @@ export default function App() {
         <Drawer.Screen name="AdminManagerDashboard" component={AdminManagerDashboard} />
         <Drawer.Screen name="AdminAddManager" component={AdminAddManager} />
         <Drawer.Screen name="AdminUpdateManager" component={AdminUpdateManager} />
+        <Drawer.Screen name="AdminEmployees" component={AdminEmployees} />
+        <Drawer.Screen name="AdminAddEmployee" component={AdminAddEmployee} />
+        <Drawer.Screen name="AdminEmployeeProfile" component={AdminEmployeeProfile} />
+        <Drawer.Screen name="AdminUpdateEmployee" component={AdminUpdateEmployee} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

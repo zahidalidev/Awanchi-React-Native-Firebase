@@ -10,7 +10,7 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 // config
 import Colors from '../../../config/Colors';
 
-function ManagerEmployeeProfile(props) {
+function AdminEmployeeProfile(props) {
 
     const [profileImage, setProfileImage] = useState(false)
     const [skills, setSkills] = useState([
@@ -110,7 +110,7 @@ function ManagerEmployeeProfile(props) {
 
     return (
         <View>
-            <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Profile" backAction={"AdminEmployees"} />
             {/* Image container */}
             <ScrollView style={{ width: "100%" }}>
                 <View style={styles.container}>
@@ -189,4 +189,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ManagerEmployeeProfile;
+export default AdminEmployeeProfile;
