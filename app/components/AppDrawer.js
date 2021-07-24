@@ -9,7 +9,7 @@ const height = Dimensions.get('window').height;
 
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
-    const [currentUser, showCurrentUser] = useState('admin');
+    const [currentUser, showCurrentUser] = useState('manager');
 
     return (
         <Drawer.Section >
