@@ -33,6 +33,9 @@ import ManUpdateFakeOrders from './app/screens/manager/fakeOrders/ManUpdateFakeO
 // ------ admin
 import AdminDashboard from './app/screens/admin/AdminDashboard';
 import AdminProfileScreen from './app/screens/admin/AdminProfileScreen';
+import AdminManagers from './app/screens/admin/manager/AdminManagers';
+import AdminManagerProfile from './app/screens/admin/manager/AdminManagerProfile';
+import AdminManagerDashboard from './app/screens/admin/manager/AdminManagerDashboard';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -91,6 +94,9 @@ export default function App() {
         {/* Admin */}
         <Drawer.Screen name="AdminDashboard" component={AdminDashboard} />
         <Drawer.Screen name="AdminProfileScreen" component={AdminProfileScreen} />
+        <Drawer.Screen name="AdminManagers" component={AdminManagers} />
+        <Drawer.Screen name="AdminManagerProfile" component={AdminManagerProfile} />
+        <Drawer.Screen name="AdminManagerDashboard" component={AdminManagerDashboard} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

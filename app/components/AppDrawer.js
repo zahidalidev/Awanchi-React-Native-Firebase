@@ -60,7 +60,7 @@ function AppDrawer({ navigation }) {
                         icon="account-multiple"
                         // active={active === 'ProfileScreen'}
                         onPress={() => {
-                            navigation.navigate('ManagerEmployees')
+                            navigation.navigate('AdminManagers')
                         }}
                     />
                     <Drawer.Item

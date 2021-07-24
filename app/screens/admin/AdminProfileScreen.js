@@ -54,7 +54,7 @@ function AdminProfileScreen(props) {
 
     return (
         <View>
-            <AppBar {...props} menu={false} title="Profile" backAction={"ManagerDashboard"} />
+            <AppBar {...props} menu={false} title="Admin Profile" backAction={"ManagerDashboard"} />
             {/* Image container */}
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(4) }} >
