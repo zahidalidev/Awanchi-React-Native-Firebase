@@ -10,65 +10,69 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 // config
 import Colors from '../../../config/Colors';
 
-function AdminManagers(props) {
+function ManagerEmployees(props) {
 
-    const [managers, setManagers] = useState([
+    const [organicOrders, setOrganicOrders] = useState([
         {
             id: 0,
-            name: 'Furqan'
+            name: 'Empror'
         },
         {
             id: 1,
-            name: 'Raqeeb'
+            name: 'Spaurjonastgh43'
         },
         {
             id: 2,
-            name: 'Ateeg Saqib'
+            name: 'Suhailjsp'
         },
         {
             id: 3,
-            name: 'Mutiur Rehman'
+            name: 'Marinalogo2'
         },
         {
             id: 4,
-            name: 'Usama Ramzan'
+            name: 'Spaurjonastgh43'
         },
         {
             id: 5,
-            name: 'Abdul Rehman'
-        }
+            name: 'Suhailjsp'
+        },
+        {
+            id: 6,
+            name: 'Marinalogo2'
+        },
 
     ])
 
-    const handleAddManager = () => {
-        props.navigation.navigate('AdminAddManager')
+    const handleAddOrganicOrder = () => {
+        props.navigation.navigate('AddEmployee')
     }
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
-            <AppBar {...props} menu={false} title="Admin Managers" backAction={"AdminDashboard"} />
+            <AppBar {...props} menu={false} title="Manager Employees" backAction={"ManagerDashboard"} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
-                    {managers.map((item, index) => (
+                    {organicOrders.map((item, index) => (
                         <View activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
                             <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.name}</Text>
                             <View style={{ flexDirection: "row", width: "25%", justifyContent: "space-between" }} >
-                                <TouchableOpacity onPress={() => props.navigation.navigate('AdminUpdateManager')} >
+                                <TouchableOpacity onPress={() => props.navigation.navigate('UpdateEmployee')} >
                                     <Feather size={RFPercentage(3)} color={Colors.secondary} name="edit" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => props.navigation.navigate('AdminManagerProfile')} >
+                                <TouchableOpacity onPress={() => props.navigation.navigate('ManagerEmployeeProfile')} >
                                     <MaterialCommunityIcons size={RFPercentage(3)} color={Colors.secondary} name="eye-outline" />
                                 </TouchableOpacity>
                             </View>
                         </View>
                     ))}
 
-                    {/* Add Order button */}
+                    {/* Add Employee button */}
                     <View style={{ marginBottom: RFPercentage(4), width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
                         <AppTextButton
-                            name="Add Manager"
+                            name="Add Employee"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddManager()}
+                            onSubmit={() => handleAddOrganicOrder()}
                             backgroundColor={Colors.primary}
                             width="80%"
                             height={RFPercentage(5.5)}
@@ -92,4 +96,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AdminManagers;
+export default ManagerEmployees;
