@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
+import { LogBox } from "react-native";
 
 // screens
 import LoginScreen from "./app/screens/auth/Index"
@@ -51,6 +52,8 @@ import Colors from './app/config/Colors';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+LogBox.ignoreLogs(['Setting a timer'])
 
 export default function App() {
   const Login = () => {

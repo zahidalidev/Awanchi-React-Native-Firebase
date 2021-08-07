@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, Modal, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
 // components
 import AppTextInput from "../../components/commom/AppTextInput"
 import AppTextButton from "../../components/commom/AppTextButton"
-import AccountText from "../../components/commom/AccountText"
+
+// services
+import { loginUser } from "../../services/UserServices"
 
 // config
 import Colors from '../../config/Colors';
+import LoadingModal from '../../components/commom/LoadingModal';
 
 function Login(props) {
     const [indicator, setIndicator] = useState(false);
@@ -37,31 +40,30 @@ function Login(props) {
 
     const handleSubmit = async () => {
         const email = feilds[0].value.trim().toLowerCase();
-        const password = feilds[1].value;
+        const password = feilds[1].value.trim();
         try {
             setIndicator(true)
 
-            const res = '';
-            // const res = await loginUser(email, password);
-            // if (!res) {
-            //     setIndicator(false)
-            //     alert("Email or Password is incorrect")
-            // return;
-            // }
-            // await AsyncStorage.setItem('user', JSON.stringify(res));
+            const res = await loginUser(email, password);
+            if (!res) {
+                setIndicator(false)
+                alert("Email or Password is incorrect")
+                return;
+            }
+            await AsyncStorage.setItem('user', JSON.stringify(res));
             setIndicator(false)
 
-            // if (res.role === 'admin') {
-            //     props.navigation.navigate('adminScreen')
-            // } else if (res.role === 'rider') {
-            //     props.navigation.navigate('riderScreen')
-            // } else if (res.role === 'restaurant') {
-            //     props.navigation.navigate('resturentScreen')
-            // } else {
-            //     props.navigation.navigate('homeScreen')
-            // }
+            if (res.role === 'employee') {
+                props.navigation.navigate('UserDashboard')
+            } else if (res.role === 'manager') {
+                props.navigation.navigate('riderScreen')
+            } else if (res.role === 'restaurant') {
+                props.navigation.navigate('resturentScreen')
+            } else {
+                props.navigation.navigate('homeScreen')
+            }
             // props.navigation.navigate('User')
-            props.navigation.navigate('ManagerDashboard')
+            // props.navigation.navigate('ManagerDashboard')
             // props.navigation.navigate('AdminDashboard')
 
         } catch (error) {
@@ -105,6 +107,8 @@ function Login(props) {
                 <Text style={{ color: Colors.grey, fontSize: Platform.OS === "ios" ? RFPercentage(2) : RFPercentage(2.6) }} >Login to continue </Text>
             </View>
 
+            <LoadingModal show={indicator} />
+
             {/* Text feilds */}
             {feilds.map((item, i) =>
                 <View key={i} style={{ marginTop: i == 0 ? RFPercentage(8) : RFPercentage(5), width: "100%" }} >
@@ -130,8 +134,6 @@ function Login(props) {
                 />
             </View>
 
-            {/* Login text */}
-            {/* <AccountText navigate={props.navigation.navigate} description="Dont't have an account? " buttnText="Sign Up" location="LoginScreen" /> */}
         </View>
     );
 }
