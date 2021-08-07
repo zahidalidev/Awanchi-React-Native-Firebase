@@ -3,10 +3,11 @@ import { Text } from 'react-native';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Button } from 'react-native-paper';
+import Colors from '../../config/Colors';
 
-function AppTextButton({ disabled = false, name, icon, onSubmit, width, height = RFPercentage(6), borderRadius = 25, backgroundColor = "black", iconSize = 20, iconLeft, buttonStyle, textStyle }) {
+function AppTextButton({ onLayout = () => { }, disabled = false, name, icon, onSubmit, width, height = RFPercentage(6), borderRadius = 10, backgroundColor = Colors.primary, iconSize = 20, iconLeft, buttonStyle, textStyle }) {
     return (
-        <Button disabled={disabled} width={width} color={backgroundColor} mode="contained" onPress={() => onSubmit()} style={{ height, borderBottomEndRadius: borderRadius, borderBottomStartRadius: borderRadius, borderTopStartRadius: borderRadius, justifyContent: "center", ...buttonStyle }} >
+        <Button onLayout={(event) => onLayout(event)} disabled={disabled} width={width} color={backgroundColor} mode="contained" onPress={() => onSubmit()} style={{ height, borderRadius: borderRadius, justifyContent: "center", ...buttonStyle }} >
             {
                 iconLeft ?
                     <MaterialCommunityIcons style={{ padding: RFPercentage(1.6), paddingRight: name ? 0 : RFPercentage(1.6) }
