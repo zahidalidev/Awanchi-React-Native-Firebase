@@ -45,3 +45,23 @@ export const AddOrder = async (body, uri) => {
     body2.orderPicture = await uploadImage(uri);
     await orderRef.add(body2);
 }
+
+export const getOrderRef = () => {
+    return orderRef;
+}
+
+export const getOrders = async () => {
+    const snapshot = await orderRef.get();
+    if (snapshot.empty) {
+        return false;
+    }
+
+    let res = []
+    snapshot.forEach(doc => {
+        let tempRes = doc.data()
+        tempRes.docId = doc.id
+        res.push(tempRes)
+    });
+
+    return res;
+}
