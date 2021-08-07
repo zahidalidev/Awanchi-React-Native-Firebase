@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // components
 import AppBar from '../../components/AppBar';
 import AppTextButton from '../../components/commom/AppTextButton';
+import LoadingModal from "../../components/commom/LoadingModal";
 
 // config
 import Colors from '../../config/Colors';
@@ -14,60 +15,21 @@ import { updateUser } from '../../services/UserServices';
 
 function ProfileScreen(props) {
 
+    const [indicator, setIndicator] = useState(false)
     const [profileImage, setProfileImage] = useState(false)
     const [userDetails, setUserDetails] = useState(
         {
             id: 0,
             name: "Full Name",
             address: "Address",
-            about: "About",
+            aboutUser: "About",
             picture: null,
-            skills: [
-
-            ]
-
+            skills: []
         }
     )
-    const [skills, setSkills] = useState([
-        {
-            id: 0,
-            name: "web"
-        },
-        {
-            id: 1,
-            name: "illustration"
-        },
-        {
-            id: 2,
-            name: "graphics"
-        },
-        {
-            id: 3,
-            name: "ui"
-        },
-        {
-            id: 4,
-            name: "interface"
-        },
-        {
-            id: 5,
-            name: "adobe"
-        },
-        {
-            id: 6,
-            name: "mobile app"
-        },
-        {
-            id: 7,
-            name: "android app"
-        },
-        {
-            id: 8,
-            name: "ios app"
-        },
-    ])
 
     const uploadImages = async (evetnType) => {
+
         try {
             await ImagePicker.requestMediaLibraryPermissionsAsync();
             let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
@@ -78,38 +40,47 @@ function ProfileScreen(props) {
             }
 
             let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
+                allowsEditing: true,
                 quality: 0.6
             });
 
             const { uri } = pickerResult;
 
             setProfileImage(uri)
-            console.log("her1")
+            setIndicator(true)
             await updateUser(userDetails.id, userDetails, [uri], ['profilePicture'])
         } catch (error) {
 
         }
+        setIndicator(false)
     }
 
     let getCurrentUser = async () => {
         try {
             let res = await AsyncStorage.getItem('user');
             res = JSON.parse(res)
-            console.log("user: ", res)
+            setProfileImage(res.pictures.profilePicture)
+            // console.log(res)
             setUserDetails(res)
         } catch (error) {
             console.log("auto login: ", error)
         }
     }
 
+    const shareHolderScreen = () => {
+        props.navigation.navigate('ShareHolderPhotos', { user: userDetails.pictures });
+    }
+
     useEffect(() => {
         getCurrentUser();
-    }, [])
+    }, [props.route.params])
 
     return (
         <View>
             <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
+
+            <LoadingModal show={indicator} />
+
             {/* Image container */}
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(4) }} >
@@ -131,12 +102,12 @@ function ProfileScreen(props) {
                             name="Share Holder"
                             textStyle={{ fontSize: RFPercentage(2) }}
                             height={RFPercentage(5)}
-                            onSubmit={() => props.navigation.navigate('ShareHolderPhotos')}
+                            onSubmit={() => shareHolderScreen()}
                         />
                     </View>
                 </View>
-                <View style={{ marginTop: RFPercentage(3), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                    <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >{userDetails.about}</Text>
+                <View style={{ marginTop: RFPercentage(3), flexDirection: 'row', width: "80%", justifyContent: 'flex-start', alignItems: "center" }} >
+                    <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >{userDetails.aboutUser}</Text>
                 </View>
                 <View style={{ backfaceVisibility: Colors.light, marginTop: RFPercentage(5), flexDirection: 'column', width: "80%", justifyContent: 'center', alignItems: "flex-start" }} >
                     <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Skills</Text>
@@ -148,7 +119,7 @@ function ProfileScreen(props) {
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) =>
                             <View style={{ margin: RFPercentage(1), marginBottom: 0, marginLeft: 0, padding: RFPercentage(0.5), paddingLeft: RFPercentage(2), paddingRight: RFPercentage(2), borderRadius: 10, borderWidth: 1, borderColor: Colors.secondaryLight }} >
-                                <Text style={{ maxWidth: RFPercentage(10), fontSize: RFPercentage(2.2), fontWeight: "bold", color: Colors.primaryLight }} >{item.name}</Text>
+                                <Text style={{ maxWidth: RFPercentage(10), fontSize: RFPercentage(2.2), fontWeight: "bold", color: Colors.primaryLight }} >{item}</Text>
                             </View>
                         }
                     />

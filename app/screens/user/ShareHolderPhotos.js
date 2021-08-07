@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // components
 import AppBar from '../../components/AppBar';
 import AppTextButton from '../../components/commom/AppTextButton';
+import LoadingModal from "../../components/commom/LoadingModal";
 
 // config
 import Colors from '../../config/Colors';
 
 // services
 import { updateUser } from '../../services/UserServices';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ShareHolderPhotos(props) {
+    const [indicator, setIndicator] = useState(false)
     const [cnicFront, setCnicFront] = useState(false)
     const [cnicBack, setCnicBack] = useState(false)
     const [agreementForm, setAgreementForm] = useState(false)
@@ -30,11 +32,11 @@ function ShareHolderPhotos(props) {
             }
 
             let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
+                allowsEditing: true,
                 quality: 0.6
             });
 
-            const { height, width, type, uri } = pickerResult;
+            const { uri } = pickerResult;
 
             if (eventType === "cnicFront") {
                 setCnicFront(uri);
@@ -51,6 +53,7 @@ function ShareHolderPhotos(props) {
     }
 
     const handleUpdatePhotos = async () => {
+        setIndicator(true)
         let user = await AsyncStorage.getItem('user');
         user = JSON.parse(user)
         try {
@@ -59,11 +62,27 @@ function ShareHolderPhotos(props) {
         } catch (error) {
             console.log("porfile pictures: ", error)
         }
+        setIndicator(false)
     }
+
+    const getLatesPictures = async () => {
+        if (props.route.params.user) {
+            const user = props.route.params.user;
+            setCnicFront(user.cnicFront)
+            setCnicBack(user.cnicBack)
+            setAgreementForm(user.agreementForm)
+            console.log(user)
+        }
+    }
+
+    useEffect(() => {
+        getLatesPictures()
+    }, [props.route.params])
 
     return (
         <View>
-            <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Profile" backAction={"ProfileScreen"} />
+            <LoadingModal show={indicator} />
             <View style={styles.container}>
                 {/* Image containers */}
                 <View style={{ marginTop: RFPercentage(4) }} >
@@ -94,10 +113,17 @@ function ShareHolderPhotos(props) {
                 </View>
 
                 {(cnicFront && cnicBack && agreementForm)
-                    ? <View style={{ marginTop: RFPercentage(4) }} >
+                    ? <View style={{ marginTop: RFPercentage(4), flexDirection: "row", justifyContent: "space-between" }} >
+                        <AppTextButton
+                            buttonStyle={{ marginRight: RFPercentage(2) }}
+                            name="Skip"
+                            width={RFPercentage(15)}
+                            backgroundColor={Colors.secondary}
+                            onSubmit={() => props.navigation.navigate('ShareHolderInfo')}
+                        />
                         <AppTextButton
                             name="Next"
-                            width={RFPercentage(20)}
+                            width={RFPercentage(15)}
                             onSubmit={() => handleUpdatePhotos()}
                         />
                     </View> : null

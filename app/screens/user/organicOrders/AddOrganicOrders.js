@@ -3,14 +3,18 @@ import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View }
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ImagePicker from 'expo-image-picker';
 
-
 // components
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
 import AppTextInput from '../../../components/commom/AppTextInput';
+import LoadingModal from "../../../components/commom/LoadingModal";
+
+// services
+import { AddOrder } from "../../../services/OrderServices"
 
 // config
 import Colors from '../../../config/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function AddOrganicOrders(props) {
 
@@ -52,11 +56,11 @@ function AddOrganicOrders(props) {
             }
 
             let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
+                allowsEditing: true,
                 quality: 0.6
             });
 
-            const { height, width, type, uri } = pickerResult;
+            const { uri } = pickerResult;
 
             setOrderImage(uri)
         } catch (error) {
@@ -64,13 +68,33 @@ function AddOrganicOrders(props) {
         }
     }
 
-    const handleAddOrganicOrder = () => {
-        // props.navigation.navigate('AddOrganicOrders')
+    const handleAddOrganicOrder = async () => {
+        try {
+            setIndicator(true);
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
+            const body = {
+                clientName: feilds[0].value,
+                budget: feilds[1].value,
+                country: feilds[2].value,
+                userId: user.id,
+                status: "accepted"
+            }
+            await AddOrder(body, orderImage);
+            setIndicator(false)
+            props.navigation.navigate('OrganicOrders')
+        } catch (error) {
+            console.log("Add Organic Order Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
-            <AppBar {...props} menu={false} title="Add Organic Orders" backAction={"UserDashboard"} />
+            <AppBar {...props} menu={false} title="Add Organic Orders" backAction={"OrganicOrders"} />
+
+            <LoadingModal show={indicator} />
+
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Order Details</Text>
