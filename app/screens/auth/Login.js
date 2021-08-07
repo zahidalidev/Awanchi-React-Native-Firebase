@@ -56,15 +56,10 @@ function Login(props) {
             if (res.role === 'employee') {
                 props.navigation.navigate('UserDashboard')
             } else if (res.role === 'manager') {
-                props.navigation.navigate('riderScreen')
-            } else if (res.role === 'restaurant') {
-                props.navigation.navigate('resturentScreen')
-            } else {
-                props.navigation.navigate('homeScreen')
+                props.navigation.navigate('ManagerDashboard')
+            } else if (res.role === 'admin') {
+                props.navigation.navigate('AdminDashboard')
             }
-            // props.navigation.navigate('User')
-            // props.navigation.navigate('ManagerDashboard')
-            // props.navigation.navigate('AdminDashboard')
 
         } catch (error) {
             console.log("login error: ", error);
@@ -78,19 +73,20 @@ function Login(props) {
         // await AsyncStorage.removeItem('user');
         try {
             let res = await AsyncStorage.getItem('user');
+            res = JSON.parse(res)
             if (res) {
-                // if (res.role === 'admin') {
-                //     props.navigation.navigate('adminScreen')
-                // } else if (res.role === 'rider') {
-                //     props.navigation.navigate('riderScreen')
-                // } else if (res.role === 'restaurant') {
-                //     props.navigation.navigate('resturentScreen')
-                // } else {
-                //     props.navigation.navigate('homeScreen')
-                // }
+                if (res.role === 'employee') {
+                    props.navigation.navigate('UserDashboard')
+                } else if (res.role === 'manager') {
+                    props.navigation.navigate('ManagerDashboard')
+                } else if (res.role === 'admin') {
+                    props.navigation.navigate('AdminDashboard')
+                } else {
+                    props.navigation.navigate('LoginScreen')
+                }
                 return;
             }
-            // props.navigation.navigate('LoginScreen');
+            props.navigation.navigate('LoginScreen');
         } catch (error) {
             console.log("auto login: ", error)
         }

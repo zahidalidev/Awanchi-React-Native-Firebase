@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Divider, Drawer } from "react-native-paper";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
@@ -9,7 +9,21 @@ const height = Dimensions.get('window').height;
 
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
-    const [currentUser, showCurrentUser] = useState('manager');
+    const [currentUser, showCurrentUser] = useState('');
+
+    let validateCurrentUser = async () => {
+        try {
+            let res = await AsyncStorage.getItem('user');
+            res = JSON.parse(res)
+            showCurrentUser(res.role)
+        } catch (error) {
+            console.log("auto login: ", error)
+        }
+    }
+
+    useEffect(() => {
+        validateCurrentUser();
+    }, []);
 
     return (
         <Drawer.Section >
