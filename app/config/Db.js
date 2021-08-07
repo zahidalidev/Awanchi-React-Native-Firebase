@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-    apiKey: "",
+    apiKey: "AIzaSyA859FazcM99Xfk2JeeWTuA7Dt5E2-RUAs",
     authDomain: "awanchi.firebaseapp.com",
     projectId: "awanchi",
     storageBucket: "awanchi.appspot.com",

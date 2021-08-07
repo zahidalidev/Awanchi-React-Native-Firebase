@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // components
 import AppBar from '../../components/AppBar';
@@ -9,10 +10,24 @@ import AppTextButton from '../../components/commom/AppTextButton';
 
 // config
 import Colors from '../../config/Colors';
+import { updateUser } from '../../services/UserServices';
 
 function ProfileScreen(props) {
 
     const [profileImage, setProfileImage] = useState(false)
+    const [userDetails, setUserDetails] = useState(
+        {
+            id: 0,
+            name: "Full Name",
+            address: "Address",
+            about: "About",
+            picture: null,
+            skills: [
+
+            ]
+
+        }
+    )
     const [skills, setSkills] = useState([
         {
             id: 0,
@@ -67,14 +82,30 @@ function ProfileScreen(props) {
                 quality: 0.6
             });
 
-            const { height, width, type, uri } = pickerResult;
+            const { uri } = pickerResult;
 
             setProfileImage(uri)
+            console.log("her1")
+            await updateUser(userDetails.id, userDetails, [uri], ['profilePicture'])
         } catch (error) {
 
         }
     }
 
+    let getCurrentUser = async () => {
+        try {
+            let res = await AsyncStorage.getItem('user');
+            res = JSON.parse(res)
+            console.log("user: ", res)
+            setUserDetails(res)
+        } catch (error) {
+            console.log("auto login: ", error)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [])
 
     return (
         <View>
@@ -92,8 +123,8 @@ function ProfileScreen(props) {
 
                 <View style={{ marginTop: RFPercentage(6), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
                     <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
-                        <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Arbaz Sheraz</Text>
-                        <Text>Lahore, Pakistan</Text>
+                        <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >{userDetails.name}</Text>
+                        <Text>{userDetails.address}</Text>
                     </View>
                     <View style={{ width: "50%", justifyContent: 'center', alignItems: "center" }} >
                         <AppTextButton
@@ -105,14 +136,15 @@ function ProfileScreen(props) {
                     </View>
                 </View>
                 <View style={{ marginTop: RFPercentage(3), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                    <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >Hi, My name is arbaz shehraz. I'm a creative geek from san francisco, CA I enjoy creating eye candy solutions for web and mobile app. Contact me at john@gmail.com</Text>
+                    <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >{userDetails.about}</Text>
                 </View>
                 <View style={{ backfaceVisibility: Colors.light, marginTop: RFPercentage(5), flexDirection: 'column', width: "80%", justifyContent: 'center', alignItems: "flex-start" }} >
                     <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Skills</Text>
+
                     <FlatList
                         style={{ marginTop: RFPercentage(1), width: "100%" }}
                         numColumns={3}
-                        data={skills}
+                        data={userDetails.skills}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) =>
                             <View style={{ margin: RFPercentage(1), marginBottom: 0, marginLeft: 0, padding: RFPercentage(0.5), paddingLeft: RFPercentage(2), paddingRight: RFPercentage(2), borderRadius: 10, borderWidth: 1, borderColor: Colors.secondaryLight }} >

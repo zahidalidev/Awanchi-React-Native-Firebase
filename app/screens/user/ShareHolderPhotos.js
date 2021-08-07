@@ -10,6 +10,10 @@ import AppTextButton from '../../components/commom/AppTextButton';
 // config
 import Colors from '../../config/Colors';
 
+// services
+import { updateUser } from '../../services/UserServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function ShareHolderPhotos(props) {
     const [cnicFront, setCnicFront] = useState(false)
     const [cnicBack, setCnicBack] = useState(false)
@@ -46,6 +50,17 @@ function ShareHolderPhotos(props) {
         }
     }
 
+    const handleUpdatePhotos = async () => {
+        let user = await AsyncStorage.getItem('user');
+        user = JSON.parse(user)
+        try {
+            await updateUser(user.id, user, [cnicFront, cnicBack, agreementForm], ['cnicFront', 'cnicBack', 'agreementForm'])
+            props.navigation.navigate('ShareHolderInfo')
+        } catch (error) {
+            console.log("porfile pictures: ", error)
+        }
+    }
+
     return (
         <View>
             <AppBar {...props} menu={false} title="Profile" backAction={"UserDashboard"} />
@@ -64,7 +79,7 @@ function ShareHolderPhotos(props) {
                     <TouchableOpacity onPress={() => uploadImages('cnicBack')} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(33), height: RFPercentage(22), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
                         {cnicBack ?
                             <Image resizeMode="contain" width={RFPercentage(22)} height={RFPercentage(22)} style={{ width: RFPercentage(33), height: RFPercentage(22), borderRadius: 10 }} source={{ uri: cnicBack }} /> :
-                            <Text style={{ fontSize: RFPercentage(2.6), color: Colors.grey }} >Upload CNIC Front</Text>
+                            <Text style={{ fontSize: RFPercentage(2.6), color: Colors.grey }} >Upload CNIC Back</Text>
                         }
                     </TouchableOpacity>
                 </View>
@@ -73,7 +88,7 @@ function ShareHolderPhotos(props) {
                     <TouchableOpacity onPress={() => uploadImages()} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(33), height: RFPercentage(22), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
                         {agreementForm ?
                             <Image resizeMode="contain" width={RFPercentage(22)} height={RFPercentage(22)} style={{ width: RFPercentage(33), height: RFPercentage(22), borderRadius: 10 }} source={{ uri: agreementForm }} /> :
-                            <Text style={{ fontSize: RFPercentage(2.6), color: Colors.grey }} >Upload CNIC Front</Text>
+                            <Text style={{ fontSize: RFPercentage(2.6), color: Colors.grey }} >Upload Agreement Form</Text>
                         }
                     </TouchableOpacity>
                 </View>
@@ -83,7 +98,7 @@ function ShareHolderPhotos(props) {
                         <AppTextButton
                             name="Next"
                             width={RFPercentage(20)}
-                            onSubmit={() => props.navigation.navigate('ShareHolderInfo')}
+                            onSubmit={() => handleUpdatePhotos()}
                         />
                     </View> : null
                 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Divider, Drawer } from "react-native-paper";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Colors from "../config/Colors";
 
@@ -24,6 +25,11 @@ function AppDrawer({ navigation }) {
     useEffect(() => {
         validateCurrentUser();
     }, []);
+
+    const handleLogout = async () => {
+        await AsyncStorage.removeItem('user');
+        navigation.navigate('LoginScreen')
+    }
 
     return (
         <Drawer.Section >
@@ -125,9 +131,7 @@ function AppDrawer({ navigation }) {
                     label="Logout"
                     icon="import"
                     // active={active === 'second'}
-                    onPress={() => {
-                        navigation.navigate('LoginScreen')
-                    }}
+                    onPress={() => handleLogout()}
                 />
             </View>
         </Drawer.Section>

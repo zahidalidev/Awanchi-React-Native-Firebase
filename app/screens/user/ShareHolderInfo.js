@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 // components
 import AppBar from '../../components/AppBar';
@@ -9,6 +10,7 @@ import AppTextButton from '../../components/commom/AppTextButton';
 
 // config
 import Colors from '../../config/Colors';
+import { updateUser } from '../../services/UserServices';
 
 function ShareHolderInfo(props) {
 
@@ -58,8 +60,26 @@ function ShareHolderInfo(props) {
         setFeilds(tempFeilds);
     }
 
-    const handleSubmit = () => {
-        props.navigation.navigate('ProfileScreen')
+    const handleSubmit = async () => {
+        let user = await AsyncStorage.getItem('user');
+        user = JSON.parse(user);
+
+        const userDetail = {
+            name: feilds[0].value,
+            fatherName: feilds[1].value,
+            cnic: feilds[2].value,
+            address: feilds[3].value,
+            skills: feilds[4].value,
+            fiverUserName: feilds[5].value,
+            fiverGmail: feilds[6].value
+        }
+
+        try {
+            await updateUser(user.id, userDetail)
+            props.navigation.navigate('ProfileScreen')
+        } catch (error) {
+            console.log("user Update: ", error)
+        }
     }
 
     return (
