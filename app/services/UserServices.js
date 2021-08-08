@@ -88,6 +88,22 @@ export const updateUser = async (id, userInfo2, uri = [false], picturesNames = [
     }
 }
 
+export const getAllUsersByRoles = async (role) => {
+    const snapshot = await userRef.where('role', '==', role).get();
+    if (snapshot.empty) {
+        return false;
+    }
+
+    let res = []
+    snapshot.forEach(doc => {
+        let tempRes = doc.data()
+        tempRes.docId = doc.id
+        res.push(tempRes)
+    });
+
+    return res;
+}
+
 export const getUserRef = () => {
     return userRef;
 }

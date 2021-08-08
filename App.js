@@ -53,7 +53,8 @@ import Colors from './app/config/Colors';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-LogBox.ignoreLogs(['Setting a timer'])
+LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreAllLogs()
 
 export default function App() {
   const Login = () => {
