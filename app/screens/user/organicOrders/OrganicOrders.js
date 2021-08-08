@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 // components
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
+import LoadingModal from "../../../components/commom/LoadingModal";
 
 // config
 import Colors from '../../../config/Colors';
@@ -13,7 +14,7 @@ import { getOrderRef, getOrders } from '../../../services/OrderServices';
 import { useEffect } from 'react';
 
 function OrganicOrders(props) {
-
+    const [indicator, setIndicator] = useState(false);
     const [organicOrders, setOrganicOrders] = useState([])
 
     const handleOrganicOrder = async () => {
@@ -21,16 +22,18 @@ function OrganicOrders(props) {
             const orderRef = getOrderRef();
             orderRef.onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
                     let orderRes = await getOrders('organic');
                     if (orderRes) {
                         setOrganicOrders(orderRes)
                     }
+                    setIndicator(false);
                 })
             })
-
         } catch (error) {
 
         }
+        setIndicator(false);
     }
 
     useEffect(() => {
@@ -40,6 +43,8 @@ function OrganicOrders(props) {
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
             <AppBar {...props} menu={false} title="Organic Orders" backAction={"UserDashboard"} />
+            <LoadingModal show={indicator} />
+
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (

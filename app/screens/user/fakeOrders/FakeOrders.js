@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 // components
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
+import LoadingModal from "../../../components/commom/LoadingModal";
 
 //services
 import { getOrderRef, getOrders } from '../../../services/OrderServices';
@@ -14,7 +15,7 @@ import { getOrderRef, getOrders } from '../../../services/OrderServices';
 import Colors from '../../../config/Colors';
 
 function FakeOrders(props) {
-
+    const [indicator, setIndicator] = useState(false);
     const [organicOrders, setOrganicOrders] = useState([])
 
     const handleFakeOrder = async () => {
@@ -22,16 +23,19 @@ function FakeOrders(props) {
             const orderRef = getOrderRef();
             orderRef.onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
                     let orderRes = await getOrders('fake');
                     if (orderRes) {
                         setOrganicOrders(orderRes)
                     }
+                    setIndicator(false);
                 })
             })
 
         } catch (error) {
 
         }
+        setIndicator(false);
     }
 
     useEffect(() => {
@@ -40,6 +44,8 @@ function FakeOrders(props) {
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
             <AppBar {...props} menu={false} title="Fake Orders" backAction={"UserDashboard"} />
+            <LoadingModal show={indicator} />
+
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (
