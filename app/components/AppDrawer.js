@@ -11,12 +11,14 @@ const height = Dimensions.get('window').height;
 function AppDrawer({ navigation }) {
     const [orderTypes, showOrderTypes] = useState(false);
     const [currentUser, showCurrentUser] = useState('');
+    const [currentUserDetails, setCurrentUserDetails] = useState('');
 
     let validateCurrentUser = async () => {
         try {
             let res = await AsyncStorage.getItem('user');
             res = JSON.parse(res)
             showCurrentUser(res.role)
+            setCurrentUserDetails(res)
         } catch (error) {
             console.log("auto login: ", error)
         }
@@ -35,11 +37,11 @@ function AppDrawer({ navigation }) {
         <Drawer.Section >
             <View style={{ justifyContent: "center", alignItems: 'center', width: "90%", height: RFPercentage(15), flexDirection: 'row', padding: RFPercentage(2.4), marginTop: RFPercentage(3) }} >
                 <View style={{ width: "45%", justifyContent: 'center', alignItems: 'center' }} >
-                    <Image height={RFPercentage(9)} width={RFPercentage(9)} style={{ width: RFPercentage(9), height: RFPercentage(9) }} source={{ uri: "https://icon-library.com/images/no-user-image-icon/no-user-image-icon-21.jpg" }} />
+                    <Image height={RFPercentage(9)} width={RFPercentage(9)} style={{ borderRadius: RFPercentage(10), width: RFPercentage(9), height: RFPercentage(9) }} source={{ uri: currentUserDetails.pictures.profilePicture ? currentUserDetails.pictures.profilePicture : "https://icon-library.com/images/no-user-image-icon/no-user-image-icon-21.jpg" }} />
                 </View>
                 <View style={{ width: "55%", justifyContent: 'center', alignItems: 'flex-start', marginLeft: RFPercentage(1) }} >
-                    <Text numberOfLines={1} style={{ fontSize: RFPercentage(2.8) }} >Furqan Raqeeb</Text>
-                    <Text numberOfLines={1} style={{ fontSize: RFPercentage(2) }} >Okara, Pakistan</Text>
+                    <Text numberOfLines={1} style={{ fontSize: RFPercentage(2.8) }} >{currentUserDetails.name}</Text>
+                    <Text numberOfLines={1} style={{ fontSize: RFPercentage(2) }} >{currentUserDetails.address}</Text>
                 </View>
             </View>
             <Divider />
