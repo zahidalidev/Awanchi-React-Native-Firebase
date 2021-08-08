@@ -79,7 +79,8 @@ function AddOrganicOrders(props) {
                 country: feilds[2].value,
                 userId: user.id,
                 status: "accepted",
-                type: "organic"
+                type: "organic",
+                date: new Date()
             }
             await AddOrder(body, orderImage);
             setIndicator(false)

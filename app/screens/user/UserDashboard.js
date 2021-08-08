@@ -32,34 +32,24 @@ function UserDashboard(props) {
         },
         {
             id: 4,
-            label: "Earning in PKR",
-            price: 20
-        },
-        {
-            id: 5,
-            label: "Earning in $",
-            price: 20
-        },
-        {
-            id: 6,
             label: "Last Month Earn PKR",
             price: 20
         },
         {
-            id: 7,
+            id: 5,
             label: "Pending Clearance",
             price: 20
         },
         {
-            id: 8,
+            id: 6,
             label: "Send to Payoneer",
             price: 20
         },
         {
-            id: 9,
+            id: 7,
             label: "Available in Account",
             price: 20
-        },
+        }
     ])
 
     return (

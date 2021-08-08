@@ -78,7 +78,8 @@ function AddFakeOrders(props) {
                 country: feilds[2].value,
                 userId: user.id,
                 status: "accepted",
-                type: "fake"
+                type: "fake",
+                date: new Date()
             }
             await AddOrder(body, orderImage);
             setIndicator(false)
