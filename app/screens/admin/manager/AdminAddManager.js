@@ -6,9 +6,11 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
 import AppTextInput from '../../../components/commom/AppTextInput';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 // config
 import Colors from '../../../config/Colors';
+import { AddUser } from '../../../services/UserServices';
 
 function AdminAddManager(props) {
 
@@ -17,22 +19,22 @@ function AdminAddManager(props) {
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "First Name",
+            placeHolder: "Name",
             value: '',
         },
         {
             id: 1,
-            placeHolder: "Last Name",
+            placeHolder: "Email",
             value: '',
         },
         {
             id: 2,
-            placeHolder: "Fiver Username",
+            placeHolder: "Fiver UserName",
             value: '',
         },
         {
             id: 3,
-            placeHolder: "City",
+            placeHolder: "Address",
             value: '',
         },
         {
@@ -49,13 +51,37 @@ function AdminAddManager(props) {
         setFeilds(tempFeilds);
     }
 
-    const handleAddManager = () => {
-        // props.navigation.navigate('AdminAddManager')
+    const handleAddManager = async () => {
+        try {
+            setIndicator(true);
+            const body = {
+                name: feilds[0].value,
+                email: feilds[1].value,
+                fiverUserName: feilds[2].value,
+                address: feilds[3].value,
+                password: feilds[4].value,
+                role: "manager",
+            }
+            let res = await AddUser(body);
+            if (!res) {
+                alert("Email already exist!")
+                return;
+            }
+            alert("Manager Added")
+            setIndicator(false)
+            props.navigation.navigate('AdminManagers')
+        } catch (error) {
+            alert("Adding Manager Error")
+            console.log("Adding Manager Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Add Manager" backAction={"AdminManagers"} />
+
+            <LoadingModal show={indicator} />
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Manager Details</Text>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons"
@@ -9,36 +9,35 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 
 // config
 import Colors from '../../../config/Colors';
+import { getAllUsersByRoles, getUserRef } from '../../../services/UserServices';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function AdminManagers(props) {
+    const [indicator, setIndicator] = useState(false)
+    const [managers, setManagers] = useState([])
 
-    const [managers, setManagers] = useState([
-        {
-            id: 0,
-            name: 'Furqan'
-        },
-        {
-            id: 1,
-            name: 'Raqeeb'
-        },
-        {
-            id: 2,
-            name: 'Ateeg Saqib'
-        },
-        {
-            id: 3,
-            name: 'Mutiur Rehman'
-        },
-        {
-            id: 4,
-            name: 'Usama Ramzan'
-        },
-        {
-            id: 5,
-            name: 'Abdul Rehman'
+    const getAllManagers = async () => {
+        try {
+            let userRef = await getUserRef();
+            userRef.onSnapshot(querySnapShot => {
+                querySnapShot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    let managerRes = await getAllUsersByRoles('manager');
+                    if (managerRes) {
+                        setManagers(managerRes)
+                    }
+                    setIndicator(false);
+                })
+            })
+        } catch (error) {
+            setIndicator(false);
         }
+        setIndicator(false);
+    }
 
-    ])
+    useEffect(() => {
+        getAllManagers()
+    }, [])
 
     const handleAddManager = () => {
         props.navigation.navigate('AdminAddManager')
@@ -46,7 +45,10 @@ function AdminManagers(props) {
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
+
             <AppBar {...props} menu={false} title="Admin Managers" backAction={"AdminDashboard"} />
+
+            <LoadingModal show={indicator} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {managers.map((item, index) => (
