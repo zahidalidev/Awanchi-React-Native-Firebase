@@ -65,3 +65,19 @@ export const getOrders = async (type) => {
 
     return res;
 }
+
+export const getOrdersEarnings = async (id) => {
+    const snapshot = await orderRef.where('userId', '==', id).get();
+    if (snapshot.empty) {
+        return false;
+    };
+    let res = [];
+    snapshot.forEach(doc => {
+        let tempRes = doc.data();
+        tempRes.docId = doc.id;
+        res.push(tempRes);
+    });
+
+    return res;
+}
+
