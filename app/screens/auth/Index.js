@@ -40,7 +40,7 @@ function Index(props) {
             {/* top container */}
             <View style={{ backgroundColor: Colors.primary, width: "100%", flex: 0.9, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
                 <Text style={{ marginTop: RFPercentage(-7), fontSize: RFPercentage(6), color: Colors.white }} >
-                    Logo
+                    Awanchi
                 </Text>
             </View>
 

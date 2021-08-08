@@ -56,7 +56,7 @@ function AdminAddManager(props) {
             setIndicator(true);
             const body = {
                 name: feilds[0].value,
-                email: feilds[1].value,
+                email: feilds[1].value.toLowerCase(),
                 fiverUserName: feilds[2].value,
                 address: feilds[3].value,
                 password: feilds[4].value,

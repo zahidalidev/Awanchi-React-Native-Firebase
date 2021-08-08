@@ -3,6 +3,7 @@ import { Divider, Drawer } from "react-native-paper";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Restart } from 'fiction-expo-restart';
 
 import Colors from "../config/Colors";
 
@@ -29,7 +30,13 @@ function AppDrawer({ navigation }) {
     }
 
     useEffect(() => {
-        validateCurrentUser();
+        let timer = setInterval(async () => {
+            await validateCurrentUser();
+        }, 1000);
+
+        return (() => {
+            clearInterval(timer)
+        })
     }, []);
 
     const handleLogout = async () => {
@@ -38,11 +45,12 @@ function AppDrawer({ navigation }) {
         setCurrentUserDetails('')
         setProfilePicture("https://icon-library.com/images/no-user-image-icon/no-user-image-icon-21.jpg")
         navigation.navigate('LoginScreen');
+        Restart()
     }
 
-    // if (!currentUser) {
-    //     return null
-    // }
+    if (!currentUser) {
+        return null
+    }
     return (
         <Drawer.Section  >
             <View style={{ justifyContent: "center", alignItems: 'center', width: "90%", height: RFPercentage(15), flexDirection: 'row', padding: RFPercentage(2.4), marginTop: RFPercentage(3) }} >
@@ -80,7 +88,7 @@ function AppDrawer({ navigation }) {
                     icon="account-multiple"
                     // active={active === 'ProfileScreen'}
                     onPress={() => {
-                        navigation.navigate('ManagerEmployees')
+                        navigation.navigate('AdminEmployees', { backPath: "ManagerDashboard" })
                     }}
                 /> : null
             }
@@ -100,7 +108,7 @@ function AppDrawer({ navigation }) {
                         icon="account-multiple"
                         // active={active === 'ProfileScreen'}
                         onPress={() => {
-                            navigation.navigate('AdminEmployees')
+                            navigation.navigate('AdminEmployees', { backPath: "AdminDashboard" })
                         }}
                     />
                 </> : <Drawer.Item

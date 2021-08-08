@@ -45,7 +45,7 @@ function AdminEmployees(props) {
 
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
-            <AppBar {...props} menu={false} title="Admin Employees" backAction={"AdminDashboard"} />
+            <AppBar {...props} menu={false} title="Employees" backAction={props.route.params.backPath} />
 
             <LoadingModal show={indicator} />
 

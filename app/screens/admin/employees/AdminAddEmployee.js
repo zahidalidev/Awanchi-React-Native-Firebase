@@ -55,7 +55,7 @@ function AdminAddEmployee(props) {
             setIndicator(true);
             const body = {
                 name: feilds[0].value,
-                email: feilds[1].value,
+                email: feilds[1].value.toLowerCase(),
                 fiverUserName: feilds[2].value,
                 address: feilds[3].value,
                 password: feilds[4].value,
@@ -78,7 +78,7 @@ function AdminAddEmployee(props) {
 
     return (
         <View style={{ flex: 1 }} >
-            <AppBar {...props} menu={false} title="Admin Employee" backAction={"AdminEmployees"} />
+            <AppBar {...props} menu={false} title="Employee" backAction={"AdminEmployees"} />
             <LoadingModal show={indicator} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
