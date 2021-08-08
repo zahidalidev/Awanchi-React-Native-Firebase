@@ -11,6 +11,9 @@ import AppTextInput from '../../../components/commom/AppTextInput';
 
 // config
 import Colors from '../../../config/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AddOrder } from '../../../services/OrderServices';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function AddFakeOrders(props) {
 
@@ -52,11 +55,11 @@ function AddFakeOrders(props) {
             }
 
             let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
+                allowsEditing: true,
                 quality: 0.6
             });
 
-            const { height, width, type, uri } = pickerResult;
+            const { uri } = pickerResult;
 
             setOrderImage(uri)
         } catch (error) {
@@ -64,13 +67,34 @@ function AddFakeOrders(props) {
         }
     }
 
-    const handleAddOrganicOrder = () => {
-        // props.navigation.navigate('AddFakeOrders')
+    const handleAddFakeOrder = async () => {
+        try {
+            setIndicator(true);
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
+            const body = {
+                clientName: feilds[0].value,
+                budget: feilds[1].value,
+                country: feilds[2].value,
+                userId: user.id,
+                status: "accepted",
+                type: "fake"
+            }
+            await AddOrder(body, orderImage);
+            setIndicator(false)
+            props.navigation.navigate('FakeOrders')
+        } catch (error) {
+            console.log("Add Organic Order Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Add Fake Orders" backAction={"FakeOrders"} />
+
+            <LoadingModal show={indicator} />
+
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Order Details</Text>
@@ -104,7 +128,7 @@ function AddFakeOrders(props) {
                         <AppTextButton
                             name="Add Order"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddOrganicOrder()}
+                            onSubmit={() => handleAddFakeOrder()}
                             backgroundColor={Colors.primary}
                             width="50%"
                             height={RFPercentage(5.5)}

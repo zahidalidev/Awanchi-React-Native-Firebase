@@ -50,8 +50,8 @@ export const getOrderRef = () => {
     return orderRef;
 }
 
-export const getOrders = async () => {
-    const snapshot = await orderRef.get();
+export const getOrders = async (type) => {
+    const snapshot = await orderRef.where('type', '==', type).get();
     if (snapshot.empty) {
         return false;
     }

@@ -21,7 +21,7 @@ function OrganicOrders(props) {
             const orderRef = getOrderRef();
             orderRef.onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(async (change) => {
-                    let orderRes = await getOrders();
+                    let orderRes = await getOrders('organic');
                     if (orderRes) {
                         setOrganicOrders(orderRes)
                     }
@@ -43,7 +43,7 @@ function OrganicOrders(props) {
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (
-                        <TouchableOpacity onPress={() => props.navigation.navigate('OrderDetail', { order: item })} activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
+                        <TouchableOpacity onPress={() => props.navigation.navigate('OrderDetail', { order: item, routeName: 'OrganicOrders' })} activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
                             <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.clientName}</Text>
                             <MaterialCommunityIcons size={RFPercentage(3)} color={Colors.primary} name="chevron-right" />
                         </TouchableOpacity>
@@ -54,7 +54,7 @@ function OrganicOrders(props) {
                         <AppTextButton
                             name="Add Organic Order"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleOrganicOrder()}
+                            onSubmit={() => props.navigation.navigate('AddOrganicOrders')}
                             backgroundColor={Colors.primary}
                             width="80%"
                             height={RFPercentage(5.5)}

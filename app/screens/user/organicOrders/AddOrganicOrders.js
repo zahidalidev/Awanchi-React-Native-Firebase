@@ -78,7 +78,8 @@ function AddOrganicOrders(props) {
                 budget: feilds[1].value,
                 country: feilds[2].value,
                 userId: user.id,
-                status: "accepted"
+                status: "accepted",
+                type: "organic"
             }
             await AddOrder(body, orderImage);
             setIndicator(false)

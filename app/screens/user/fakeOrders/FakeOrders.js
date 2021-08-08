@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons } from "@expo/vector-icons"
@@ -7,55 +7,44 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
 
+//services
+import { getOrderRef, getOrders } from '../../../services/OrderServices';
+
 // config
 import Colors from '../../../config/Colors';
 
 function FakeOrders(props) {
 
-    const [organicOrders, setOrganicOrders] = useState([
-        {
-            id: 0,
-            name: 'Empror'
-        },
-        {
-            id: 1,
-            name: 'Spaurjonastgh43'
-        },
-        {
-            id: 2,
-            name: 'Suhailjsp'
-        },
-        {
-            id: 3,
-            name: 'Marinalogo2'
-        },
-        {
-            id: 1,
-            name: 'Spaurjonastgh43'
-        },
-        {
-            id: 2,
-            name: 'Suhailjsp'
-        },
-        {
-            id: 3,
-            name: 'Marinalogo2'
+    const [organicOrders, setOrganicOrders] = useState([])
+
+    const handleFakeOrder = async () => {
+        try {
+            const orderRef = getOrderRef();
+            orderRef.onSnapshot(querySnapshot => {
+                querySnapshot.docChanges().forEach(async (change) => {
+                    let orderRes = await getOrders('fake');
+                    if (orderRes) {
+                        setOrganicOrders(orderRes)
+                    }
+                })
+            })
+
+        } catch (error) {
+
         }
-
-    ])
-
-    const handleAddOrganicOrder = () => {
-        props.navigation.navigate('AddFakeOrders')
     }
 
+    useEffect(() => {
+        handleFakeOrder()
+    }, [])
     return (
         <View style={{ backgroundColor: Colors.white, flex: 1 }} >
             <AppBar {...props} menu={false} title="Fake Orders" backAction={"UserDashboard"} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {organicOrders.map((item, index) => (
-                        <TouchableOpacity onPress={() => props.navigation.navigate('OrderDetail')} activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
-                            <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.name}</Text>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('OrderDetail', { order: item, routeName: 'FakeOrders' })} activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
+                            <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.clientName}</Text>
                             <MaterialCommunityIcons size={RFPercentage(3)} color={Colors.primary} name="chevron-right" />
                         </TouchableOpacity>
                     ))}
@@ -65,7 +54,7 @@ function FakeOrders(props) {
                         <AppTextButton
                             name="Add Fake Order"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddOrganicOrder()}
+                            onSubmit={() => props.navigation.navigate('AddFakeOrders')}
                             backgroundColor={Colors.primary}
                             width="80%"
                             height={RFPercentage(5.5)}
