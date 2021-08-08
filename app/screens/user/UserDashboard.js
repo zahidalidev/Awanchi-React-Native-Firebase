@@ -1,16 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // components
 import AppBar from '../../components/AppBar';
 import Colors from '../../config/Colors';
-import { getOrderRef, getOrdersEarnings } from '../../services/OrderServices';
 import LoadingModal from "../../components/commom/LoadingModal";
 
+// services
+import { getOrderRef, getOrdersEarnings } from '../../services/OrderServices';
+import AppTextInput from '../../components/commom/AppTextInput';
+import AppTextButton from '../../components/commom/AppTextButton';
+import { getUserRef, updateUser } from '../../services/UserServices';
+
 function UserDashboard(props) {
+    const [showFeilds, setShowFeilds] = useState(false);
     const [indicator, setIndicator] = useState(false);
+    const [feilds, setFeilds] = useState([
+        {
+            id: 0,
+            placeHolder: "Total Tip",
+            value: '',
+        },
+        {
+            id: 1,
+            placeHolder: "Pending Clearance",
+            value: '',
+        },
+        {
+            id: 2,
+            placeHolder: "Sent to Payoneer",
+            value: '',
+        },
+        {
+            id: 3,
+            placeHolder: "Available in Account",
+            value: '',
+        }
+    ]);
+
+
     const [userEarnings, setUserEarnings] = useState([
         {
             id: 0,
@@ -53,6 +84,12 @@ function UserDashboard(props) {
             price: 0
         }
     ])
+
+    const handleChange = (text, id) => {
+        const tempFeilds = [...feilds];
+        tempFeilds[id].value = text;
+        setFeilds(tempFeilds);
+    }
 
     const getMyAllOrdersEarning = async () => {
         try {
@@ -125,11 +162,51 @@ function UserDashboard(props) {
             orderRef.onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(async (change) => {
                     setIndicator(true);
-                    getMyAllOrdersEarning();
+                    await getMyAllOrdersEarning();
                     setIndicator(false);
                 })
             })
+        } catch (error) {
 
+        }
+        setIndicator(false);
+    }
+
+    const userEarningFromAsyncStor = async () => {
+        try {
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
+            let totalTipEarning = user.totalTip;
+            let totalPendingEarning = user.pendingClearance;
+            let sentToPayoneer = user.sentToPayoneer;
+            let availableInAccount = user.availableInAccount;
+
+            totalTipEarning = parseFloat(totalTipEarning);
+            totalPendingEarning = parseFloat(totalPendingEarning);
+            sentToPayoneer = parseFloat(sentToPayoneer);
+            availableInAccount = parseFloat(availableInAccount);
+
+            let tempUserEarnings = [...userEarnings];
+            tempUserEarnings[1].price = totalTipEarning;
+            tempUserEarnings[5].price = totalPendingEarning;
+            tempUserEarnings[6].price = sentToPayoneer;
+            tempUserEarnings[7].price = availableInAccount;
+            setUserEarnings(tempUserEarnings);
+        } catch (error) {
+            console.log("userEarningFromAsyncStor Error: ", error)
+        }
+    }
+
+    const handleUserEarning = async () => {
+        try {
+            const userRef = getUserRef();
+            userRef.onSnapshot(querySnapshot => {
+                querySnapshot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    await userEarningFromAsyncStor();
+                    setIndicator(false);
+                })
+            })
         } catch (error) {
 
         }
@@ -137,29 +214,96 @@ function UserDashboard(props) {
     }
 
     useEffect(() => {
-        handleAllOrder()
+        handleAllOrder();
+        handleUserEarning();
     }, [])
 
-    return (
-        <View>
-            <AppBar {...props} title="Employee Dashboard" />
-            <LoadingModal show={indicator} />
+    const handleUpdate = async () => {
+        setIndicator(true)
+        let user = await AsyncStorage.getItem('user');
+        user = JSON.parse(user);
 
-            <View style={styles.container} >
-                <FlatList
-                    style={{ width: "85%", marginTop: RFPercentage(5) }}
-                    numColumns={2}
-                    data={userEarnings}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={(data) =>
-                        <View style={{ marginTop: RFPercentage(3), maxWidth: "50%", marginLeft: (data.index % 2) != 0 ? RFPercentage(2) : 0, alignItems: 'flex-start', justifyContent: "flex-start", flex: 1 }} >
-                            <Text style={{ fontSize: RFPercentage(2.6), color: Colors.primary }} >{data.item.label}</Text>
-                            <Text style={{ fontSize: RFPercentage(2.8), color: Colors.secondary, marginTop: RFPercentage(0.5) }} >{data.item.price}</Text>
+        var reg = /^\d*(\.\d+)?$/;
+        if (!(feilds[0].value.match(reg) && feilds[1].value.match(reg) && feilds[2].value.match(reg) && feilds[3].value.match(reg))) {
+            alert("Only Numbers are allowed");
+            setIndicator(false)
+            return;
+        }
+
+        const userDetail = {
+            totalTip: feilds[0].value,
+            pendingClearance: feilds[1].value,
+            sentToPayoneer: feilds[2].value,
+            availableInAccount: feilds[3].value,
+            email: user.email,
+            password: user.password,
+        }
+
+        try {
+            await updateUser(user.id, userDetail);
+            await handleUserEarning()
+        } catch (error) {
+            console.log("user Update: ", error)
+        }
+        setIndicator(false)
+        setShowFeilds(false)
+    }
+
+    return (
+        <ScrollView>
+            <View>
+                <AppBar {...props} title="Employee Dashboard" />
+                <LoadingModal show={indicator} />
+
+                <View style={{ width: "94%", alignItems: "flex-end", marginTop: RFPercentage(2) }} >
+                    <TouchableOpacity activeOpacity={0.5} onPress={() => setShowFeilds(!showFeilds)} >
+                        <MaterialCommunityIcons name="pencil-outline" color={Colors.secondary} size={30} />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.container} >
+                    <FlatList
+                        style={{ width: "85%", marginTop: RFPercentage(1) }}
+                        numColumns={2}
+                        data={userEarnings}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={(data) =>
+                            <View style={{ marginTop: RFPercentage(3), maxWidth: "50%", marginLeft: (data.index % 2) != 0 ? RFPercentage(2) : 0, alignItems: 'flex-start', justifyContent: "flex-start", flex: 1 }} >
+                                <Text style={{ fontSize: RFPercentage(2.6), color: Colors.primary }} >{data.item.label}</Text>
+                                <Text style={{ fontSize: RFPercentage(2.8), color: Colors.secondary, marginTop: RFPercentage(0.5) }} >{data.item.price}</Text>
+                            </View>
+                        }
+                    />
+                </View>
+
+                {showFeilds ? <>
+                    {/* updating*/}
+                    {feilds.map((item, i) =>
+                        <View key={i} style={{ marginTop: i == 0 ? RFPercentage(5) : RFPercentage(2), width: "85%", marginLeft: "7.5%" }} >
+                            <AppTextInput
+                                placeHolder={item.placeHolder}
+                                width="100%"
+                                value={item.value}
+                                onChange={(text) => handleChange(text, item.id)}
+                            />
                         </View>
-                    }
-                />
+                    )}
+
+                    {/* Login button */}
+                    <View style={{ marginBottom: RFPercentage(3), width: "100%", marginTop: RFPercentage(4), justifyContent: 'center', alignItems: 'center' }} >
+                        <AppTextButton
+                            name="Update"
+                            borderRadius={RFPercentage(1.3)}
+                            onSubmit={() => handleUpdate()}
+                            backgroundColor={Colors.primary}
+                            width="60%"
+                            height={RFPercentage(5.5)}
+                        />
+                    </View>
+                </> : null}
+
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

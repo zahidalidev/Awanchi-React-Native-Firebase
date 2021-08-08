@@ -88,5 +88,6 @@ export const updateUser = async (id, userInfo2, uri = [false], picturesNames = [
     }
 }
 
-
-
+export const getUserRef = () => {
+    return userRef;
+}
