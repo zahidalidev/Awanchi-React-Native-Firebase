@@ -9,6 +9,8 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 // config
 import Colors from '../../../config/Colors';
 import AppTextInput from '../../../components/commom/AppTextInput';
+import LoadingModal from '../../../components/commom/LoadingModal';
+import { AddUser } from '../../../services/UserServices';
 
 function AdminAddEmployee(props) {
     const [indicator, setIndicator] = useState(false);
@@ -16,12 +18,12 @@ function AdminAddEmployee(props) {
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "First Name",
+            placeHolder: "Name",
             value: '',
         },
         {
             id: 1,
-            placeHolder: "Last Name",
+            placeHolder: "email",
             value: '',
         },
         {
@@ -31,7 +33,7 @@ function AdminAddEmployee(props) {
         },
         {
             id: 3,
-            placeHolder: "City",
+            placeHolder: "Address",
             value: '',
         },
         {
@@ -49,11 +51,35 @@ function AdminAddEmployee(props) {
     }
 
     const handleSubmit = async () => {
+        try {
+            setIndicator(true);
+            const body = {
+                name: feilds[0].value,
+                email: feilds[1].value,
+                fiverUserName: feilds[2].value,
+                address: feilds[3].value,
+                password: feilds[4].value,
+                role: "employee",
+            }
+            let res = await AddUser(body);
+            if (!res) {
+                alert("Email already exist!")
+                return;
+            }
+            alert("employee Added")
+            setIndicator(false)
+            props.navigation.navigate('AdminEmployees')
+        } catch (error) {
+            alert("Adding Employee Error")
+            console.log("Adding Employee Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Admin Employee" backAction={"AdminEmployees"} />
+            <LoadingModal show={indicator} />
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
 

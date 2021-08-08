@@ -104,6 +104,16 @@ export const getAllUsersByRoles = async (role) => {
     return res;
 }
 
+export const AddUser = async (body) => {
+    const snapshot = await userRef.where('email', '==', body.email).get();
+    if (!snapshot.empty) {
+        return false;
+    }
+
+    await userRef.add(body);
+    return true;
+}
+
 export const getUserRef = () => {
     return userRef;
 }
