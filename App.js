@@ -43,6 +43,7 @@ import AdminEmployees from './app/screens/admin/employees/AdminEmployees';
 import AdminAddEmployee from './app/screens/admin/employees/AdminAddEmployee';
 import AdminEmployeeProfile from './app/screens/admin/employees/AdminEmployeeProfile';
 import AdminUpdateEmployee from './app/screens/admin/employees/AdminUpdateEmployee';
+import AdminUserDashboard from './app/screens/admin/employees/AdminUserDashboard';
 
 // components
 import AppDrawer from './app/components/AppDrawer';
@@ -113,6 +114,7 @@ export default function App() {
         <Drawer.Screen name="AdminAddEmployee" component={AdminAddEmployee} />
         <Drawer.Screen name="AdminEmployeeProfile" component={AdminEmployeeProfile} />
         <Drawer.Screen name="AdminUpdateEmployee" component={AdminUpdateEmployee} />
+        <Drawer.Screen name="AdminUserDashboard" component={AdminUserDashboard} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

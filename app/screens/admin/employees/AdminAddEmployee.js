@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import ReactNativeCrossPicker from "react-native-cross-picker"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // components
 import AppBar from '../../../components/AppBar';
@@ -10,10 +12,11 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 import Colors from '../../../config/Colors';
 import AppTextInput from '../../../components/commom/AppTextInput';
 import LoadingModal from '../../../components/commom/LoadingModal';
-import { AddUser } from '../../../services/UserServices';
+import { AddUser, getAllUsersByRoles, getUserRef } from '../../../services/UserServices';
 
 function AdminAddEmployee(props) {
     const [indicator, setIndicator] = useState(false);
+    const [selectedManager, setManager] = useState('')
 
     const [feilds, setFeilds] = useState([
         {
@@ -44,6 +47,46 @@ function AdminAddEmployee(props) {
         },
     ]);
 
+
+    const [allManagers, setAllmanagers] = useState([{}])
+
+    const iconComponent = () => {
+        return <MaterialCommunityIcons
+            name={"chevron-down"}
+            size={20}
+            color={"grey"}
+        />
+    }
+
+    const getAllManagers = async () => {
+        try {
+            let userRef = await getUserRef();
+            userRef.onSnapshot(querySnapShot => {
+                querySnapShot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    let res = await getAllUsersByRoles('manager');
+                    if (!res) {
+                        alert('No manager found');
+                        return;
+                    }
+                    let temp = []
+                    for (let i = 0; i < res.length; i++) {
+                        let tempObj = { label: res[i].name, value: res[i].name };
+                        temp.push(tempObj);
+                    }
+                    setAllmanagers(temp)
+                    setIndicator(false);
+                })
+            })
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        getAllManagers();
+    }, [])
+
     const handleChange = (text, id) => {
         const tempFeilds = [...feilds];
         tempFeilds[id].value = text;
@@ -60,12 +103,17 @@ function AdminAddEmployee(props) {
                 address: feilds[3].value,
                 password: feilds[4].value,
                 role: "employee",
+                manager: selectedManager
             }
+
             let res = await AddUser(body);
+            console.log("User body: ", body)
             if (!res) {
-                alert("Email already exist!")
+                alert("Email already exist!");
+                setIndicator(false)
                 return;
             }
+
             alert("employee Added")
             setIndicator(false)
             props.navigation.navigate('AdminEmployees')
@@ -95,6 +143,17 @@ function AdminAddEmployee(props) {
                             />
                         </View>
                     )}
+                    <View style={{ marginTop: RFPercentage(5), width: "100%" }} >
+                        <ReactNativeCrossPicker
+                            modalTextStyle={{ color: Colors.primary }}
+                            mainComponentStyle={{ borderColor: "rgba(0, 74, 173, 0)", backgroundColor: Colors.white }}
+                            iconComponent={iconComponent}
+                            items={allManagers}
+                            setItem={setManager} selectedItem={selectedManager}
+                            placeholder="Select Manager"
+                            modalMarginTop={"90%"} // popup model margin from the top 
+                        />
+                    </View>
 
                     {/* Add Employee button */}
                     <View style={{ marginBottom: RFPercentage(4), width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >

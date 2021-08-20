@@ -22,10 +22,12 @@ function AppDrawer({ navigation }) {
             if (res) {
                 showCurrentUser(res.role)
                 setCurrentUserDetails(res)
-                setProfilePicture(res.pictures.profilePicture)
+                if (res.pictures != undefined) {
+                    setProfilePicture(res.pictures.profilePicture)
+                }
             }
         } catch (error) {
-            console.log("auto login: ", error)
+            // console.log("auto login: ", error)
         }
     }
 

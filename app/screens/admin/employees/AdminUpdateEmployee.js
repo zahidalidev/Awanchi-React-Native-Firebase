@@ -11,17 +11,15 @@ import AppTextButton from '../../../components/commom/AppTextButton';
 // config
 import Colors from '../../../config/Colors';
 import AppTextInput from '../../../components/commom/AppTextInput';
+import { useEffect } from 'react';
+import { getAllUsersByRoles, getUserRef, updateUser } from '../../../services/UserServices';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function AdminUpdateEmployee(props) {
     const [indicator, setIndicator] = useState(false);
     const [selectedManager, setManager] = useState('')
 
-    const managers = [
-        { label: "Manager1", value: "Manager1" },
-        { label: "Manager2", value: "Manager2" },
-        { label: "Manager3", value: "Manager3" },
-        { label: "Manager4", value: "Manager4" },
-    ]
+    const [allManagers, setAllmanagers] = useState([{}])
 
     const iconComponent = () => {
         return <MaterialCommunityIcons
@@ -34,12 +32,12 @@ function AdminUpdateEmployee(props) {
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "First Name",
+            placeHolder: "Name",
             value: '',
         },
         {
             id: 1,
-            placeHolder: "Last Name",
+            placeHolder: "Email",
             value: '',
         },
         {
@@ -49,7 +47,7 @@ function AdminUpdateEmployee(props) {
         },
         {
             id: 3,
-            placeHolder: "City",
+            placeHolder: "Address",
             value: '',
         },
         {
@@ -60,6 +58,47 @@ function AdminUpdateEmployee(props) {
         },
     ]);
 
+    const getAllManagers = async () => {
+        try {
+            let userRef = await getUserRef();
+            userRef.onSnapshot(querySnapShot => {
+                querySnapShot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    let res = await getAllUsersByRoles('manager');
+                    if (!res) {
+                        alert('No manager found');
+                        return;
+                    }
+                    let temp = []
+                    for (let i = 0; i < res.length; i++) {
+                        let tempObj = { label: res[i].name, value: res[i].name };
+                        temp.push(tempObj);
+                    }
+                    setAllmanagers(temp)
+                    setIndicator(false);
+                })
+            })
+        } catch (error) {
+
+        }
+    }
+
+    const updateEmployeeDetails = () => {
+        let user = props.route.params.item;
+        let tempFeilds = [...feilds];
+        tempFeilds[0].value = user.name
+        tempFeilds[1].value = user.email
+        tempFeilds[2].value = user.fiverUserName
+        tempFeilds[3].value = user.address
+        tempFeilds[4].value = user.password
+        setManager(user.manager)
+    }
+
+    useEffect(() => {
+        getAllManagers();
+        updateEmployeeDetails()
+    }, [props.route])
+
     const handleChange = (text, id) => {
         const tempFeilds = [...feilds];
         tempFeilds[id].value = text;
@@ -67,12 +106,29 @@ function AdminUpdateEmployee(props) {
     }
 
     const handleSubmit = async () => {
+        setIndicator(true)
+        const userDetail = {
+            name: feilds[0].value,
+            email: feilds[1].value,
+            fiverUserName: feilds[2].value,
+            address: feilds[3].value,
+            password: feilds[4].value,
+            manager: selectedManager
+        }
+
+        try {
+            await updateUser(props.route.params.item.docId, userDetail)
+        } catch (error) {
+            console.log("user Update: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Update Employee" backAction={"AdminEmployees"} />
             <View style={styles.container}>
+                <LoadingModal show={indicator} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
 
                     {/* Text feilds */}
@@ -93,7 +149,7 @@ function AdminUpdateEmployee(props) {
                             modalTextStyle={{ color: Colors.primary }}
                             mainComponentStyle={{ borderColor: "rgba(0, 74, 173, 0)", backgroundColor: Colors.white }}
                             iconComponent={iconComponent}
-                            items={managers}
+                            items={allManagers}
                             setItem={setManager} selectedItem={selectedManager}
                             placeholder="Change Manager"
                             modalMarginTop={"90%"} // popup model margin from the top 

@@ -6,13 +6,13 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 // components
 import AppTextInput from "../../components/commom/AppTextInput"
 import AppTextButton from "../../components/commom/AppTextButton"
+import LoadingModal from '../../components/commom/LoadingModal';
 
 // services
 import { loginUser } from "../../services/UserServices"
 
 // config
 import Colors from '../../config/Colors';
-import LoadingModal from '../../components/commom/LoadingModal';
 
 function Login(props) {
     const [indicator, setIndicator] = useState(false);
