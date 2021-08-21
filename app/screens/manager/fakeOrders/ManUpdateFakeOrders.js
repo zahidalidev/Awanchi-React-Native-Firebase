@@ -89,7 +89,6 @@ function ManUpdateFakeOrders(props) {
 
     const fillOrderDetail = () => {
         if (props.route.params.item) {
-            console.log(props.route.params)
             let tempFeilds = [...feilds];
             tempFeilds[0].value = props.route.params.item.clientName
             tempFeilds[1].value = props.route.params.item.budget
