@@ -83,10 +83,12 @@ function AddFakeOrders(props) {
             }
             await AddOrder(body, orderImage);
             setIndicator(false)
+            alert("Order Added")
             props.navigation.navigate('FakeOrders')
         } catch (error) {
             console.log("Add Organic Order Error: ", error)
         }
+
         setIndicator(false)
     }
 

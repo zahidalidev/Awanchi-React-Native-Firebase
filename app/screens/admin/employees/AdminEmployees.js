@@ -10,7 +10,7 @@ import LoadingModal from "../../../components/commom/LoadingModal"
 
 // config
 import Colors from '../../../config/Colors';
-import { getAllUsersByRoles, getUserRef } from '../../../services/UserServices';
+import { getAllUsersByRoles, getSpecificUsersByRoles, getUserRef } from '../../../services/UserServices';
 
 function AdminEmployees(props) {
 
@@ -23,9 +23,16 @@ function AdminEmployees(props) {
             userRef.onSnapshot(querySnapShot => {
                 querySnapShot.docChanges().forEach(async (change) => {
                     setIndicator(true);
-                    let orderRes = await getAllUsersByRoles('employee');
-                    if (orderRes) {
-                        setEmployees(orderRes)
+                    if (props.route.params.type === 'all') {
+                        let orderRes = await getAllUsersByRoles('employee');
+                        if (orderRes) {
+                            setEmployees(orderRes)
+                        }
+                    } else {
+                        let orderRes = await getSpecificUsersByRoles('employee', props.route.params.type);
+                        if (orderRes) {
+                            setEmployees(orderRes)
+                        }
                     }
                     setIndicator(false);
                 })

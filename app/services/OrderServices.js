@@ -43,7 +43,7 @@ const uploadImage = async (uri) => {
 export const AddOrder = async (body, uri) => {
     let body2 = { ...body };
     body2.orderPicture = await uploadImage(uri);
-    await orderRef.add(body2);
+    return await orderRef.add(body2);
 }
 
 export const getOrderRef = () => {
@@ -52,6 +52,22 @@ export const getOrderRef = () => {
 
 export const getOrders = async (type) => {
     const snapshot = await orderRef.where('type', '==', type).get();
+    if (snapshot.empty) {
+        return false;
+    }
+
+    let res = []
+    snapshot.forEach(doc => {
+        let tempRes = doc.data()
+        tempRes.docId = doc.id
+        res.push(tempRes)
+    });
+
+    return res;
+}
+
+export const getManOrders = async (type, manId) => {
+    const snapshot = await orderRef.where('type', '==', type).where('manId', '==', manId).get();
     if (snapshot.empty) {
         return false;
     }
@@ -81,3 +97,12 @@ export const getOrdersEarnings = async (id) => {
     return res;
 }
 
+export const updateOrder = async (id, detail) => {
+    try {
+        await orderRef.doc(id).update(detail)
+        return true;
+    } catch (error) {
+        console.log("false: ", error)
+        return false
+    }
+}

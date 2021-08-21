@@ -12,6 +12,11 @@ import AppTextInput from '../../../components/commom/AppTextInput';
 
 // config
 import Colors from '../../../config/Colors';
+import { updateOrder } from '../../../services/OrderServices';
+import { useEffect } from 'react';
+import { getSpecificUsersByRoles, getUserRef } from '../../../services/UserServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function ManUpdateFakeOrders(props) {
 
@@ -19,12 +24,8 @@ function ManUpdateFakeOrders(props) {
     const [orderImage, setOrderImage] = useState(false)
     const [selectedEmployee, setEmployee] = useState('')
 
-    const employees = [
-        { label: "Employee1", value: "Employee1" },
-        { label: "Employee2", value: "Employee2" },
-        { label: "Employee3", value: "Employee3" },
-        { label: "Employee4", value: "Employee4" },
-    ]
+    const [employees, setEmployees] = useState([{}]);
+    const [allEmployees, setAllEmployees] = useState([{}]);
 
     const iconComponent = () => {
         return <MaterialCommunityIcons
@@ -37,7 +38,7 @@ function ManUpdateFakeOrders(props) {
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "Order Name",
+            placeHolder: "Client Name",
             value: '',
         },
         {
@@ -53,31 +54,66 @@ function ManUpdateFakeOrders(props) {
         setFeilds(tempFeilds);
     }
 
-    const uploadImages = async (evetnType) => {
+    const getAllEmployees = async () => {
         try {
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-            let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
 
-            if (permissionResult.granted === false) {
-                alert("Permission to access camera roll is required!");
-                return;
-            }
+            let userRef = await getUserRef();
+            userRef.onSnapshot(querySnapShot => {
+                querySnapShot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    let orderRes = await getSpecificUsersByRoles('employee', user.name);
+                    if (orderRes) {
 
-            let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
-                quality: 0.6
-            });
-
-            const { height, width, type, uri } = pickerResult;
-
-            setOrderImage(uri)
+                        let tempUsers = []
+                        for (let i = 0; i < orderRes.length; i++) {
+                            let tempObj = { label: orderRes[i].name, value: orderRes[i].docId };
+                            tempUsers.push(tempObj);
+                        }
+                        setAllEmployees(orderRes)
+                        setEmployees(tempUsers)
+                    }
+                    setIndicator(false);
+                })
+            })
         } catch (error) {
 
         }
     }
 
-    const handleAddOrganicOrder = () => {
-        // props.navigation.navigate('ManUpdateFakeOrders')
+    useEffect(() => {
+        getAllEmployees();
+        fillOrderDetail()
+    }, [props.route.params])
+
+    const fillOrderDetail = () => {
+        if (props.route.params.item) {
+            console.log(props.route.params)
+            let tempFeilds = [...feilds];
+            tempFeilds[0].value = props.route.params.item.clientName
+            tempFeilds[1].value = props.route.params.item.budget
+            setEmployee(props.route.params.item.userId)
+        }
+    }
+
+    const handleUpdateFakeOrder = async () => {
+        try {
+            setIndicator(true);
+            let tempEmp = allEmployees.filter(item => item.docId == selectedEmployee);
+            const body = {
+                clientName: feilds[0].value,
+                budget: feilds[1].value,
+                userId: selectedEmployee,
+                employee: tempEmp[0].name,
+            }
+            await updateOrder(props.route.params.item.docId, body);
+            alert("Order Updated")
+            setIndicator(false)
+        } catch (error) {
+            console.log("Update Fake Order Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
@@ -87,7 +123,7 @@ function ManUpdateFakeOrders(props) {
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Order Details</Text>
                 </View>
-
+                <LoadingModal show={indicator} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {/* Text feilds */}
                     {feilds.map((item, i) =>
@@ -119,7 +155,7 @@ function ManUpdateFakeOrders(props) {
                         <AppTextButton
                             name="Update Order"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddOrganicOrder()}
+                            onSubmit={() => handleUpdateFakeOrder()}
                             backgroundColor={Colors.primary}
                             width="55%"
                             height={RFPercentage(5.5)}

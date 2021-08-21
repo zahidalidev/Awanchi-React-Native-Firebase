@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
@@ -13,11 +14,25 @@ function ManDetailFakeOrders(props) {
     const [detail, setDetail] = useState(
         {
             id: 0,
-            orderName: "this is name",
-            price: "230",
-            employee: 'Arbaz'
+            clientName: "",
+            budget: "",
+            employee: ''
         }
     );
+
+    const getOrderDetails = async () => {
+        try {
+            let tempobj = props.route.params.item;
+            setDetail(tempobj)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        getOrderDetails()
+    }, [props.route.params])
+
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Fake Order Detail" backAction={"ManFakeOrders"} />
@@ -31,11 +46,11 @@ function ManDetailFakeOrders(props) {
                     <View style={{ marginTop: RFPercentage(5), width: "100%", marginLeft: RFPercentage(2) }} >
                         <View style={{ flexDirection: "row", justifyContent: "space-around" }} >
                             <Text style={{ width: "50%", fontSize: RFPercentage(2.7), fontWeight: Platform.OS === 'android' ? "bold" : "600" }} >Order Name</Text>
-                            <Text style={{ width: "50%", fontSize: RFPercentage(2.7) }} >{detail.orderName}</Text>
+                            <Text style={{ width: "50%", fontSize: RFPercentage(2.7) }} >{detail.clientName}</Text>
                         </View>
                         <View style={{ marginTop: RFPercentage(2), flexDirection: "row", justifyContent: "space-around" }} >
                             <Text style={{ width: "50%", fontSize: RFPercentage(2.7), fontWeight: Platform.OS === 'android' ? "bold" : "600" }} >Order Price</Text>
-                            <Text style={{ width: "50%", fontSize: RFPercentage(2.7) }} >{detail.price}</Text>
+                            <Text style={{ width: "50%", fontSize: RFPercentage(2.7) }} >${detail.budget}</Text>
                         </View>
                         <View style={{ marginTop: RFPercentage(2), flexDirection: "row", justifyContent: "space-around" }} >
                             <Text style={{ width: "50%", fontSize: RFPercentage(2.7), fontWeight: Platform.OS === 'android' ? "bold" : "600" }} >Employee Name</Text>

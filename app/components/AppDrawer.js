@@ -90,7 +90,7 @@ function AppDrawer({ navigation }) {
                     icon="account-multiple"
                     // active={active === 'ProfileScreen'}
                     onPress={() => {
-                        navigation.navigate('AdminEmployees', { backPath: "ManagerDashboard" })
+                        navigation.navigate('AdminEmployees', { backPath: "ManagerDashboard", type: currentUserDetails.name })
                     }}
                 /> : null
             }
@@ -110,7 +110,7 @@ function AppDrawer({ navigation }) {
                         icon="account-multiple"
                         // active={active === 'ProfileScreen'}
                         onPress={() => {
-                            navigation.navigate('AdminEmployees', { backPath: "AdminDashboard" })
+                            navigation.navigate('AdminEmployees', { backPath: "AdminDashboard", type: "all" })
                         }}
                     />
                 </> : <Drawer.Item

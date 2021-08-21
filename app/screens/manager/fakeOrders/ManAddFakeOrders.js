@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ImagePicker from 'expo-image-picker';
 import ReactNativeCrossPicker from "react-native-cross-picker"
@@ -12,6 +12,11 @@ import AppTextInput from '../../../components/commom/AppTextInput';
 
 // config
 import Colors from '../../../config/Colors';
+import { AddOrder } from '../../../services/OrderServices';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+import { getSpecificUsersByRoles, getUserRef } from '../../../services/UserServices';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function ManAddFakeOrders(props) {
 
@@ -19,12 +24,8 @@ function ManAddFakeOrders(props) {
     const [orderImage, setOrderImage] = useState(false)
     const [selectedEmployee, setEmployee] = useState('')
 
-    const employees = [
-        { label: "Employee1", value: "Employee1" },
-        { label: "Employee2", value: "Employee2" },
-        { label: "Employee3", value: "Employee3" },
-        { label: "Employee4", value: "Employee4" },
-    ]
+    const [employees, setEmployees] = useState([{}]);
+    const [allEmployees, setAllEmployees] = useState([{}]);
 
     const iconComponent = () => {
         return <MaterialCommunityIcons
@@ -37,12 +38,17 @@ function ManAddFakeOrders(props) {
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "Order Name",
+            placeHolder: "Client Name",
             value: '',
         },
         {
             id: 1,
             placeHolder: "Price in $",
+            value: '',
+        },
+        {
+            id: 2,
+            placeHolder: "Country",
             value: '',
         }
     ]);
@@ -52,6 +58,38 @@ function ManAddFakeOrders(props) {
         tempFeilds[id].value = text;
         setFeilds(tempFeilds);
     }
+
+    const getAllEmployees = async () => {
+        try {
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
+
+            let userRef = await getUserRef();
+            userRef.onSnapshot(querySnapShot => {
+                querySnapShot.docChanges().forEach(async (change) => {
+                    setIndicator(true);
+                    let orderRes = await getSpecificUsersByRoles('employee', user.name);
+                    if (orderRes) {
+
+                        let tempUsers = []
+                        for (let i = 0; i < orderRes.length; i++) {
+                            let tempObj = { label: orderRes[i].name, value: orderRes[i].docId };
+                            tempUsers.push(tempObj);
+                        }
+                        setAllEmployees(orderRes)
+                        setEmployees(tempUsers)
+                    }
+                    setIndicator(false);
+                })
+            })
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        getAllEmployees()
+    }, [])
 
     const uploadImages = async (evetnType) => {
         try {
@@ -76,13 +114,36 @@ function ManAddFakeOrders(props) {
         }
     }
 
-    const handleAddOrganicOrder = () => {
-        // props.navigation.navigate('ManAddFakeOrders')
+    const handleAddFakeOrder = async () => {
+        try {
+            setIndicator(true);
+            let user = await AsyncStorage.getItem('user');
+            user = JSON.parse(user);
+            let tempEmp = allEmployees.filter(item => item.docId == selectedEmployee);
+            const body = {
+                clientName: feilds[0].value,
+                budget: feilds[1].value,
+                country: feilds[2].value,
+                userId: selectedEmployee,
+                employee: tempEmp[0].name,
+                manId: user.id,
+                status: "accepted",
+                type: "fake",
+                date: new Date()
+            }
+            await AddOrder(body, orderImage);
+            alert("Order Added")
+            setIndicator(false)
+        } catch (error) {
+            console.log("Add Fake Order Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
-            <AppBar {...props} menu={false} title="Add Fake Orders" backAction={"ManFakeOrders"} />
+            <AppBar {...props} menu={false} title="Add Fake Order" backAction={"ManFakeOrders"} />
+            <LoadingModal show={indicator} />
             <View style={styles.container}>
                 <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
                     <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Order Details</Text>
@@ -114,12 +175,22 @@ function ManAddFakeOrders(props) {
                         />
                     </View>
 
+
+                    <View style={{ marginTop: RFPercentage(4), width: "100%", justifyContent: "center", alignItems: 'center' }} >
+                        <TouchableOpacity onPress={() => uploadImages()} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(25), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
+                            {orderImage ?
+                                <Image width={RFPercentage(23)} height={RFPercentage(23)} style={{ width: RFPercentage(25), height: RFPercentage(23), borderRadius: 10 }} source={{ uri: orderImage }} /> :
+                                <Text style={{ fontSize: RFPercentage(2.8), color: Colors.grey }} >Order Screenshot</Text>
+                            }
+                        </TouchableOpacity>
+                    </View>
+
                     {/* Add Order button */}
                     <View style={{ marginBottom: RFPercentage(4), width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
                         <AppTextButton
                             name="Add Order"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddOrganicOrder()}
+                            onSubmit={() => handleAddFakeOrder()}
                             backgroundColor={Colors.primary}
                             width="50%"
                             height={RFPercentage(5.5)}
