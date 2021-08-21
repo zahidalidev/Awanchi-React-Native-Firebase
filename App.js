@@ -19,6 +19,7 @@ import AddFakeOrders from './app/screens/user/fakeOrders/AddFakeOrders';
 // ------ manager
 import ManagerDashboard from './app/screens/manager/ManagerDashboard';
 import ManagerProfileScreen from './app/screens/manager/ManagerProfileScreen';
+import ManagerProfileInfo from './app/screens/manager/ManagerProfileInfo';
 import ManagerEmployees from './app/screens/manager/employees/ManagerEmployees';
 import AddEmployee from './app/screens/manager/employees/AddEmployee';
 import ManagerEmployeeProfile from './app/screens/manager/employees/ManagerEmployeeProfile';
@@ -89,6 +90,7 @@ export default function App() {
         {/* manager */}
         <Drawer.Screen name="ManagerDashboard" component={ManagerDashboard} />
         <Drawer.Screen name="ManagerProfileScreen" component={ManagerProfileScreen} />
+        <Drawer.Screen name="ManagerProfileInfo" component={ManagerProfileInfo} />
         <Drawer.Screen name="ManagerEmployees" component={ManagerEmployees} />
         <Drawer.Screen name="AddEmployee" component={AddEmployee} />
         <Drawer.Screen name="UpdateEmployee" component={UpdateEmployee} />
