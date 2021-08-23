@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    StatusBar, StyleSheet, Text, View, TouchableOpacity, Animated, ScrollView, Dimensions
+    StatusBar, StyleSheet, Text, View, Image, Animated, ScrollView, Dimensions
 } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
@@ -11,6 +11,7 @@ import SignUp from './SignUp';
 // config
 import Colors from "../../config/Colors"
 
+import logo from "../../../assets/awanchiSmallWhiteContrast.png"
 
 const { width } = Dimensions.get("window");
 
@@ -39,9 +40,10 @@ function Index(props) {
 
             {/* top container */}
             <View style={{ backgroundColor: Colors.primary, width: "100%", flex: 0.9, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
-                <Text style={{ marginTop: RFPercentage(-7), fontSize: RFPercentage(6), color: Colors.white }} >
+                {/* <Text style={{ marginTop: RFPercentage(-7), fontSize: RFPercentage(6), color: Colors.white }} >
                     Awanchi
-                </Text>
+                </Text> */}
+                <Image source={logo} style={{ marginTop: RFPercentage(-7), width: RFPercentage(20), height: RFPercentage(20) }} />
             </View>
 
             {/* Bottom Contaienr */}

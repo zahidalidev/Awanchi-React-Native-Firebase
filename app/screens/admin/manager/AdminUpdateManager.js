@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
 // components
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
-import AppTextInput from '../../../components/commom/AppTextInput';
 
 // config
 import Colors from '../../../config/Colors';
+import AppTextInput from '../../../components/commom/AppTextInput';
+import { useEffect } from 'react';
+import { updateUser } from '../../../services/UserServices';
+import LoadingModal from '../../../components/commom/LoadingModal';
 
 function AdminUpdateManager(props) {
-
     const [indicator, setIndicator] = useState(false);
 
     const [feilds, setFeilds] = useState([
         {
             id: 0,
-            placeHolder: "First Name",
+            placeHolder: "Name",
             value: '',
         },
         {
             id: 1,
-            placeHolder: "Last Name",
+            placeHolder: "Email",
             value: '',
         },
         {
@@ -32,7 +34,7 @@ function AdminUpdateManager(props) {
         },
         {
             id: 3,
-            placeHolder: "City",
+            placeHolder: "Address",
             value: '',
         },
         {
@@ -43,28 +45,54 @@ function AdminUpdateManager(props) {
         },
     ]);
 
+    const updateEmployeeDetails = () => {
+        let user = props.route.params.item;
+        let tempFeilds = [...feilds];
+        tempFeilds[0].value = user.name
+        tempFeilds[1].value = user.email
+        tempFeilds[2].value = user.fiverUserName
+        tempFeilds[3].value = user.address
+        tempFeilds[4].value = user.password
+        setFeilds(tempFeilds)
+    }
+
+    useEffect(() => {
+        updateEmployeeDetails()
+    }, [props.route])
+
     const handleChange = (text, id) => {
         const tempFeilds = [...feilds];
         tempFeilds[id].value = text;
         setFeilds(tempFeilds);
     }
 
-    const handleAddManager = () => {
-        // props.navigation.navigate('AdminUpdateManager')
+    const handleSubmit = async () => {
+        setIndicator(true)
+        const userDetail = {
+            name: feilds[0].value,
+            email: feilds[1].value,
+            fiverUserName: feilds[2].value,
+            address: feilds[3].value,
+            password: feilds[4].value,
+        }
+        try {
+            await updateUser(props.route.params.item.docId, userDetail)
+        } catch (error) {
+            console.log("Manager Update Error: ", error)
+        }
+        setIndicator(false)
     }
 
     return (
         <View style={{ flex: 1 }} >
             <AppBar {...props} menu={false} title="Update Manager" backAction={"AdminManagers"} />
             <View style={styles.container}>
-                <View style={{ marginTop: RFPercentage(3), width: "85%", alignItems: "center" }} >
-                    <Text style={{ color: Colors.primary, fontSize: Platform.OS === "ios" ? RFPercentage(3.2) : RFPercentage(4.3) }} >Manager Details</Text>
-                </View>
-
+                <LoadingModal show={indicator} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
+
                     {/* Text feilds */}
                     {feilds.map((item, i) =>
-                        <View key={i} style={{ marginTop: i == 0 ? RFPercentage(5) : RFPercentage(4), width: "100%" }} >
+                        <View key={i} style={{ marginTop: i == 0 ? RFPercentage(6) : RFPercentage(5), width: "100%" }} >
                             <AppTextInput
                                 placeHolder={item.placeHolder}
                                 width="100%"
@@ -75,20 +103,19 @@ function AdminUpdateManager(props) {
                         </View>
                     )}
 
-                    {/* Add Order button */}
+                    {/* Add Employee button */}
                     <View style={{ marginBottom: RFPercentage(4), width: "100%", marginTop: RFPercentage(5), justifyContent: 'center', alignItems: 'center' }} >
                         <AppTextButton
                             name="Update Manager"
                             borderRadius={RFPercentage(1.3)}
-                            onSubmit={() => handleAddManager()}
+                            onSubmit={() => handleSubmit()}
                             backgroundColor={Colors.primary}
-                            width="60%"
+                            width="80%"
                             height={RFPercentage(5.5)}
                         />
                     </View>
                 </ScrollView>
             </View>
-
         </View>
     );
 }

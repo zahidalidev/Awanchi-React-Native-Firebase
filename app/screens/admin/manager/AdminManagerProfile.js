@@ -1,180 +1,105 @@
-import React, { useState } from 'react';
-import { FlatList, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // components
 import AppBar from '../../../components/AppBar';
 import AppTextButton from '../../../components/commom/AppTextButton';
+import LoadingModal from "../../../components/commom/LoadingModal";
 
 // config
 import Colors from '../../../config/Colors';
+import { updateUser } from '../../../services/UserServices';
 
 function AdminManagerProfile(props) {
 
+    const [indicator, setIndicator] = useState(false)
     const [profileImage, setProfileImage] = useState(false)
-    const [skills, setSkills] = useState([
+    const [userDetails, setUserDetails] = useState(
         {
-            id: 0,
-            name: "web"
-        },
-        {
-            id: 1,
-            name: "illustration"
-        },
-        {
-            id: 2,
-            name: "graphics"
-        },
-        {
-            id: 3,
-            name: "ui"
-        },
-        {
-            id: 4,
-            name: "interface"
-        },
-        {
-            id: 5,
-            name: "adobe"
-        },
-        {
-            id: 6,
-            name: "mobile app"
-        },
-        {
-            id: 7,
-            name: "android app"
-        },
-        {
-            id: 8,
-            name: "ios app"
-        },
-        {
-            id: 5,
-            name: "adobe"
-        },
-        {
-            id: 6,
-            name: "mobile app"
-        },
-        {
-            id: 7,
-            name: "android app"
-        },
-        {
-            id: 8,
-            name: "ios app"
-        },
-        {
-            id: 5,
-            name: "adobe"
-        },
-        {
-            id: 6,
-            name: "mobile app"
-        },
-        {
-            id: 7,
-            name: "android app"
-        },
-        {
-            id: 8,
-            name: "ios app"
-        },
-    ])
+            docId: 0,
+            name: "Full Name",
+            address: "Address",
+            aboutUser: "About",
+            pictures: null,
+            skills: []
+        }
+    )
 
-    const uploadImages = async (evetnType) => {
+    let getCurrentUser = async () => {
         try {
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-            let permissionResult = await ImagePicker.getMediaLibraryPermissionsAsync();
-
-            if (permissionResult.granted === false) {
-                alert("Permission to access camera roll is required!");
-                return;
+            let res = props.route.params.item;
+            console.log(res)
+            setUserDetails(res)
+            if (res.pictures != undefined) {
+                setProfileImage(res.pictures.profilePicture)
             }
-
-            let pickerResult = await ImagePicker.launchImageLibraryAsync({
-                // allowsEditing: true,
-                quality: 0.6
-            });
-
-            const { height, width, type, uri } = pickerResult;
-
-            setProfileImage(uri)
         } catch (error) {
-
+            console.log("Admin Manager profile: ", error)
         }
     }
 
+    const shareHolderScreen = () => {
+        props.navigation.navigate('AdminManagerDashboard', { item: userDetails });
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [props.route.params])
 
     return (
         <View>
-            <AppBar {...props} menu={false} title="Profile" backAction={"AdminManagers"} />
+            <AppBar {...props} menu={false} title="Manager Profile" backAction={"AdminManagers"} />
+
+            <LoadingModal show={indicator} />
+
             {/* Image container */}
-            <ScrollView style={{ width: "100%" }}>
-                <View style={styles.container}>
-                    <View style={{ marginTop: RFPercentage(4) }} >
-                        <TouchableOpacity onPress={() => uploadImages()} activeOpacity={0.6} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
-                            {profileImage ?
-                                <Image width={RFPercentage(23)} height={RFPercentage(23)} style={{ width: RFPercentage(23), height: RFPercentage(23), borderRadius: 10 }} source={{ uri: profileImage }} /> :
-                                <Text style={{ fontSize: RFPercentage(2.7), color: Colors.grey }} >Image not Uploaded</Text>
-                            }
-                        </TouchableOpacity>
-                    </View>
+            <View style={styles.container}>
+                <View style={{ marginTop: RFPercentage(4) }} >
+                    <TouchableOpacity activeOpacity={1} style={{ justifyContent: "center", alignItems: 'center', width: RFPercentage(23), height: RFPercentage(23), borderWidth: 1, borderColor: Colors.mediumGrey, borderRadius: 10 }} >
+                        {profileImage ?
+                            <Image width={RFPercentage(23)} height={RFPercentage(23)} style={{ width: RFPercentage(23), height: RFPercentage(23), borderRadius: 10 }} source={{ uri: profileImage }} /> :
+                            <Text style={{ fontSize: RFPercentage(3.5), color: Colors.grey }} >Upload</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
 
-                    <View style={{ marginTop: RFPercentage(6), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                        <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
-                            <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Arbaz Sheraz</Text>
-                            <Text>Lahore, Pakistan</Text>
-                        </View>
-                        <View style={{ width: "50%", justifyContent: 'center', alignItems: "center" }} >
-                            <AppTextButton
-                                name="Earning Details"
-                                textStyle={{ fontSize: RFPercentage(2) }}
-                                height={RFPercentage(5)}
-                                onSubmit={() => props.navigation.navigate('AdminManagerDashboard')}
-                            />
-                        </View>
+                <View style={{ marginTop: RFPercentage(6), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
+                    <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
+                        <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >{userDetails.name}</Text>
+                        <Text>{userDetails.address}</Text>
                     </View>
-                    <View style={{ marginTop: RFPercentage(4), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                        <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
-                            <Text style={{ fontSize: RFPercentage(2.5), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Father Name</Text>
-                            <Text>Sheraz</Text>
-                        </View>
-                        <View style={{ width: "50%", justifyContent: 'center', alignItems: "flex-start" }} >
-                            <Text style={{ fontSize: RFPercentage(2.5), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >CNIC</Text>
-                            <Text>34101-3522327-8</Text>
-                        </View>
-                    </View>
-
-                    <View style={{ marginTop: RFPercentage(2), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                        <View style={{ width: "100%", justifyContent: 'center', alignItems: "flex-start" }} >
-                            <Text style={{ fontSize: RFPercentage(2.5), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Full Address</Text>
-                            <Text>Model town sector D lahore, Punjab, Pakistan</Text>
-                        </View>
-                    </View>
-
-                    <View style={{ marginTop: RFPercentage(3), flexDirection: 'row', width: "80%", justifyContent: 'center', alignItems: "center" }} >
-                        <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >Hi, My name is arbaz shehraz. I'm a creative geek from san francisco, CA I enjoy creating eye candy solutions for web and mobile app. Contact me at john@gmail.com</Text>
-                    </View>
-                    <View style={{ backfaceVisibility: Colors.light, marginTop: RFPercentage(5), flexDirection: 'column', width: "80%", justifyContent: 'center', alignItems: "flex-start" }} >
-                        <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Skills</Text>
-                        <FlatList
-                            style={{ marginTop: RFPercentage(1), width: "100%" }}
-                            numColumns={3}
-                            data={skills}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) =>
-                                <View style={{ margin: RFPercentage(1), marginBottom: 0, marginLeft: 0, padding: RFPercentage(0.5), paddingLeft: RFPercentage(2), paddingRight: RFPercentage(2), borderRadius: 10, borderWidth: 1, borderColor: Colors.secondaryLight }} >
-                                    <Text style={{ maxWidth: RFPercentage(10), fontSize: RFPercentage(2.2), fontWeight: "bold", color: Colors.primaryLight }} >{item.name}</Text>
-                                </View>
-                            }
+                    <View style={{ width: "50%", justifyContent: 'center', alignItems: "center" }} >
+                        <AppTextButton
+                            name="Earning Details"
+                            textStyle={{ fontSize: RFPercentage(2) }}
+                            height={RFPercentage(5)}
+                            onSubmit={() => shareHolderScreen()}
                         />
-
                     </View>
                 </View>
-            </ScrollView>
+                <View style={{ marginTop: RFPercentage(3), flexDirection: 'row', width: "80%", justifyContent: 'flex-start', alignItems: "center" }} >
+                    <Text style={{ color: Colors.grey, fontSize: RFPercentage(2.3) }} >{userDetails.aboutUser}</Text>
+                </View>
+                <View style={{ backfaceVisibility: Colors.light, marginTop: RFPercentage(5), flexDirection: 'column', width: "80%", justifyContent: 'center', alignItems: "flex-start" }} >
+                    <Text style={{ fontSize: RFPercentage(3.2), color: Colors.primary, fontWeight: Platform.OS === "android" ? "bold" : "600" }} >Skills</Text>
+
+                    <FlatList
+                        style={{ marginTop: RFPercentage(1), width: "100%" }}
+                        numColumns={3}
+                        data={userDetails.skills}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) =>
+                            <View style={{ margin: RFPercentage(1), marginBottom: 0, marginLeft: 0, padding: RFPercentage(0.5), paddingLeft: RFPercentage(2), paddingRight: RFPercentage(2), borderRadius: 10, borderWidth: 1, borderColor: Colors.secondaryLight }} >
+                                <Text style={{ maxWidth: RFPercentage(10), fontSize: RFPercentage(2.2), fontWeight: "bold", color: Colors.primaryLight }} >{item}</Text>
+                            </View>
+                        }
+                    />
+
+                </View>
+            </View>
         </View>
     );
 }
@@ -184,8 +109,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginRight: 100,
         justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: RFPercentage(15)
+        alignItems: 'center'
     }
 })
 

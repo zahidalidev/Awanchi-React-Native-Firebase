@@ -47,7 +47,7 @@ function AdminEmployeeProfile(props) {
 
     useEffect(() => {
         getCurrentUser();
-    }, [])
+    }, [props.route.params])
 
     return (
         <View>

@@ -97,7 +97,7 @@ function UserDashboard(props) {
             user = JSON.parse(user);
             let res = await getOrdersEarnings(user.id);
             if (!res) {
-                alert("Orders not found");
+                console.log("Orders not found");
                 return;
             }
 
@@ -270,7 +270,7 @@ function UserDashboard(props) {
                         renderItem={(data) =>
                             <View style={{ marginTop: RFPercentage(3), maxWidth: "50%", marginLeft: (data.index % 2) != 0 ? RFPercentage(2) : 0, alignItems: 'flex-start', justifyContent: "flex-start", flex: 1 }} >
                                 <Text style={{ fontSize: RFPercentage(2.6), color: Colors.primary }} >{data.item.label}</Text>
-                                <Text style={{ fontSize: RFPercentage(2.8), color: Colors.secondary, marginTop: RFPercentage(0.5) }} >{data.item.price}</Text>
+                                <Text style={{ fontSize: RFPercentage(2.8), color: Colors.secondary, marginTop: RFPercentage(0.5) }} >{data.item.price ? data.item.price : 0}</Text>
                             </View>
                         }
                     />

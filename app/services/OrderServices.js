@@ -97,6 +97,21 @@ export const getOrdersEarnings = async (id) => {
     return res;
 }
 
+export const getAllOrdersEarnings = async () => {
+    const snapshot = await orderRef.get();
+    if (snapshot.empty) {
+        return false;
+    };
+    let res = [];
+    snapshot.forEach(doc => {
+        let tempRes = doc.data();
+        tempRes.docId = doc.id;
+        res.push(tempRes);
+    });
+
+    return res;
+}
+
 export const updateOrder = async (id, detail) => {
     try {
         await orderRef.doc(id).update(detail)

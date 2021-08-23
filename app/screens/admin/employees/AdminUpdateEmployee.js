@@ -92,6 +92,7 @@ function AdminUpdateEmployee(props) {
         tempFeilds[3].value = user.address
         tempFeilds[4].value = user.password
         setManager(user.manager)
+        setFeilds(tempFeilds);
     }
 
     useEffect(() => {
