@@ -78,8 +78,13 @@ export const updateUser = async (id, userInfo2, uri = [false], picturesNames = [
             res.id = doc.id
         });
 
-        await AsyncStorage.removeItem('user')
-        await AsyncStorage.setItem('user', JSON.stringify(res))
+        let tempUser = await AsyncStorage.getItem('user');
+        tempUser = JSON.parse(tempUser);
+        if (tempUser.email === res.email) {
+            await AsyncStorage.removeItem('user')
+            await AsyncStorage.setItem('user', JSON.stringify(res))
+        }
+
         return res
 
     } catch (error) {

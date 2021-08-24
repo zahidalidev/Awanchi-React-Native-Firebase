@@ -124,6 +124,17 @@ function AdminDashboard(props) {
     useEffect(() => {
         getMyAllOrdersEarning()
         handleUserEarning();
+
+        return () => {
+            let tempUserEarnings = [...userEarnings];
+            tempUserEarnings[0].price = 0;
+            tempUserEarnings[1].price = 0;
+            tempUserEarnings[2].price = 0;
+            tempUserEarnings[3].price = 0;
+            tempUserEarnings[4].price = 0;
+            tempUserEarnings[5].price = 0;
+            setUserEarnings(tempUserEarnings)
+        }
     }, [])
 
     const handleChange = (text, id) => {
@@ -141,6 +152,11 @@ function AdminDashboard(props) {
             let totalPaid = user.totalPaid;
             let lastMonthPaid = user.lastMonthPaid;
 
+            handleChange(availableForOrders ? availableForOrders : '0', 0)
+            handleChange(pendingClearance ? pendingClearance : '0', 1)
+            handleChange(totalPaid ? totalPaid : '0', 2)
+            handleChange(lastMonthPaid ? lastMonthPaid : '0', 3)
+
             availableForOrders = parseFloat(availableForOrders);
             pendingClearance = parseFloat(pendingClearance);
             totalPaid = parseFloat(totalPaid);
@@ -151,6 +167,9 @@ function AdminDashboard(props) {
             tempUserEarnings[3].price = pendingClearance;
             tempUserEarnings[4].price = totalPaid;
             tempUserEarnings[5].price = lastMonthPaid;
+
+
+
             setUserEarnings(tempUserEarnings);
         } catch (error) {
             console.log("userEarningFromAsyncStor Error: ", error)
@@ -177,7 +196,6 @@ function AdminDashboard(props) {
         setIndicator(true)
         let user = await AsyncStorage.getItem('user');
         user = JSON.parse(user);
-
         var reg = /^\d*(\.\d+)?$/;
         if (!(feilds[0].value.match(reg) && feilds[1].value.match(reg) && feilds[2].value.match(reg) && feilds[3].value.match(reg))) {
             alert("Only Numbers are allowed");
@@ -186,10 +204,10 @@ function AdminDashboard(props) {
         }
 
         const userDetail = {
-            availableForOrders: feilds[0].value,
-            pendingClearance: feilds[1].value,
-            totalPaid: feilds[2].value,
-            lastMonthPaid: feilds[3].value,
+            availableForOrders: feilds[0].value ? feilds[0].value : 0,
+            pendingClearance: feilds[1].value ? feilds[1].value : 0,
+            totalPaid: feilds[2].value ? feilds[2].value : 0,
+            lastMonthPaid: feilds[3].value ? feilds[3].value : 0,
             email: user.email,
             password: user.password,
         }

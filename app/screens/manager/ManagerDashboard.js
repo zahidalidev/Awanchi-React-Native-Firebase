@@ -139,6 +139,17 @@ function ManagerDashboard(props) {
     useEffect(() => {
         getMyAllOrdersEarning()
         handleUserEarning();
+
+        return () => {
+            let tempUserEarnings = [...userEarnings];
+            tempUserEarnings[0].price = 0;
+            tempUserEarnings[1].price = 0;
+            tempUserEarnings[2].price = 0;
+            tempUserEarnings[3].price = 0;
+            tempUserEarnings[4].price = 0;
+            tempUserEarnings[5].price = 0;
+            setUserEarnings(tempUserEarnings)
+        }
     }, [])
 
     const handleChange = (text, id) => {
@@ -201,10 +212,10 @@ function ManagerDashboard(props) {
         }
 
         const userDetail = {
-            availableForOrders: feilds[0].value,
-            pendingClearance: feilds[1].value,
-            totalPaid: feilds[2].value,
-            lastMonthPaid: feilds[3].value,
+            availableForOrders: feilds[0].value ? feilds[0].value : 0,
+            pendingClearance: feilds[1].value ? feilds[1].value : 0,
+            totalPaid: feilds[2].value ? feilds[2].value : 0,
+            lastMonthPaid: feilds[3].value ? feilds[3].value : 0,
             email: user.email,
             password: user.password,
         }

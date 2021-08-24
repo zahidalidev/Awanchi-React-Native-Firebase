@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons"
 
@@ -15,6 +15,13 @@ import LoadingModal from '../../../components/commom/LoadingModal';
 function AdminManagers(props) {
     const [indicator, setIndicator] = useState(false)
     const [managers, setManagers] = useState([])
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        getAllManagers()
+        setRefreshing(false);
+    }, []);
 
     const getAllManagers = async () => {
         try {
@@ -50,7 +57,11 @@ function AdminManagers(props) {
 
             <LoadingModal show={indicator} />
             <View style={styles.container}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
+                <ScrollView refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />} showsVerticalScrollIndicator={false} style={{ width: "80%", flex: 1 }} >
                     {managers.map((item, index) => (
                         <View activeOpacity={0.4} key={index} style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: RFPercentage(3), padding: RFPercentage(1), borderBottomWidth: 1, borderBottomColor: Colors.lightGrey }} >
                             <Text style={{ fontSize: RFPercentage(3), color: Colors.primary }} >{item.name}</Text>

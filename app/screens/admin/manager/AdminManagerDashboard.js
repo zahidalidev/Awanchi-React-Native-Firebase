@@ -78,18 +78,6 @@ function AdminManagerDashboard(props) {
         try {
             let user = props.route.params.item;
 
-            if (user.availableForOrders && user.pendingClearance && user.totalPaid && user.lastMonthPaid) {
-                handleChange(user.availableForOrders, 0)
-                handleChange(user.pendingClearance, 1)
-                handleChange(user.totalPaid, 2)
-                handleChange(user.lastMonthPaid, 3)
-            } else {
-                handleChange(0, 0)
-                handleChange(0, 1)
-                handleChange(0, 2)
-                handleChange(0, 3)
-            }
-
             let orderRes = await getSpecificUsersByRoles('employee', user.name);
             if (!orderRes) {
                 return;
@@ -158,6 +146,7 @@ function AdminManagerDashboard(props) {
             tempUserEarnings[3].price = 0;
             tempUserEarnings[4].price = 0;
             tempUserEarnings[5].price = 0;
+            setUserEarnings(tempUserEarnings)
         }
     }, [props.route.params])
 
@@ -170,10 +159,16 @@ function AdminManagerDashboard(props) {
     const userEarningFromAsyncStor = async () => {
         try {
             let user = props.route.params.item;
-            let availableForOrders = user.availableForOrders;
-            let pendingClearance = user.pendingClearance;
-            let totalPaid = user.totalPaid;
-            let lastMonthPaid = user.lastMonthPaid;
+
+            let availableForOrders = user.availableForOrders ? user.availableForOrders : 0;
+            let pendingClearance = user.pendingClearance ? user.pendingClearance : 0;
+            let totalPaid = user.totalPaid ? user.totalPaid : 0;
+            let lastMonthPaid = user.lastMonthPaid ? user.lastMonthPaid : 0;
+
+            handleChange(availableForOrders ? availableForOrders : '0', 0)
+            handleChange(pendingClearance ? pendingClearance : '0', 1)
+            handleChange(totalPaid ? totalPaid : '0', 2)
+            handleChange(lastMonthPaid ? lastMonthPaid : '0', 3)
 
             availableForOrders = parseFloat(availableForOrders);
             pendingClearance = parseFloat(pendingClearance);
@@ -198,6 +193,7 @@ function AdminManagerDashboard(props) {
             userRef.onSnapshot(querySnapshot => {
                 querySnapshot.docChanges().forEach(async (change) => {
                     setIndicator(true);
+                    await getMyAllOrdersEarning()
                     await userEarningFromAsyncStor();
                     setIndicator(false);
                 })
@@ -210,8 +206,6 @@ function AdminManagerDashboard(props) {
 
     const handleUpdate = async () => {
         setIndicator(true)
-        let user = props.route.params.item;
-
         var reg = /^\d*(\.\d+)?$/;
         if (!(feilds[0].value.match(reg) && feilds[1].value.match(reg) && feilds[2].value.match(reg) && feilds[3].value.match(reg))) {
             alert("Only Numbers are allowed");
@@ -219,18 +213,21 @@ function AdminManagerDashboard(props) {
             return;
         }
 
+        let user = props.route.params.item;
+
         const userDetail = {
-            availableForOrders: feilds[0].value,
-            pendingClearance: feilds[1].value,
-            totalPaid: feilds[2].value,
-            lastMonthPaid: feilds[3].value,
+            availableForOrders: feilds[0].value ? feilds[0].value : 0,
+            pendingClearance: feilds[1].value ? feilds[1].value : 0,
+            totalPaid: feilds[2].value ? feilds[2].value : 0,
+            lastMonthPaid: feilds[3].value ? feilds[3].value : 0,
             email: user.email,
             password: user.password,
         }
 
         try {
-            await updateUser(user.id, userDetail);
+            await updateUser(user.docId, userDetail);
             await handleUserEarning()
+            props.navigation.navigate('AdminAddManager')
         } catch (error) {
             console.log("user Update: ", error)
         }

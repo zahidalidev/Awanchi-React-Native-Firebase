@@ -21,22 +21,22 @@ function AdminUserDashboard(props) {
         {
             id: 0,
             placeHolder: "Total Tip",
-            value: 0,
+            value: '',
         },
         {
             id: 1,
             placeHolder: "Pending Clearance",
-            value: 0,
+            value: '',
         },
         {
             id: 2,
             placeHolder: "Sent to Payoneer",
-            value: 0,
+            value: '',
         },
         {
             id: 3,
             placeHolder: "Available in Account",
-            value: 0,
+            value: '',
         }
     ]);
 
@@ -93,6 +93,7 @@ function AdminUserDashboard(props) {
     const getMyAllOrdersEarning = async () => {
         try {
             let user = props.route.params.item;
+
             let res = await getOrdersEarnings(user.docId);
             if (!res) {
                 // alert("Orders not found");
@@ -161,6 +162,7 @@ function AdminUserDashboard(props) {
                 querySnapshot.docChanges().forEach(async (change) => {
                     setIndicator(true);
                     await getMyAllOrdersEarning();
+                    await getMyAllOrdersEarning()
                     setIndicator(false);
                 })
             })
@@ -173,10 +175,16 @@ function AdminUserDashboard(props) {
     const userEarningFromAsyncStor = async () => {
         try {
             let user = props.route.params.item;
+
             let totalTipEarning = user.totalTip ? user.totalTip : 0;
             let totalPendingEarning = user.pendingClearance ? user.pendingClearance : 0;
             let sentToPayoneer = user.sentToPayoneer ? user.sentToPayoneer : 0;
             let availableInAccount = user.availableInAccount ? user.availableInAccount : 0;
+
+            handleChange(totalTipEarning ? totalTipEarning : '0', 0)
+            handleChange(totalPendingEarning ? totalPendingEarning : '0', 1)
+            handleChange(sentToPayoneer ? sentToPayoneer : '0', 2)
+            handleChange(availableInAccount ? availableInAccount : '0', 3)
 
             totalTipEarning = parseFloat(totalTipEarning);
             totalPendingEarning = parseFloat(totalPendingEarning);
@@ -213,11 +221,23 @@ function AdminUserDashboard(props) {
     useEffect(() => {
         handleAllOrder();
         handleUserEarning();
-    }, [])
+
+        return () => {
+            let tempUserEarnings = [...userEarnings];
+            tempUserEarnings[0].price = 0;
+            tempUserEarnings[1].price = 0;
+            tempUserEarnings[2].price = 0;
+            tempUserEarnings[3].price = 0;
+            tempUserEarnings[4].price = 0;
+            tempUserEarnings[5].price = 0;
+            tempUserEarnings[6].price = 0;
+            tempUserEarnings[7].price = 0;
+            setUserEarnings(tempUserEarnings)
+        }
+    }, [props.route.params])
 
     const handleUpdate = async () => {
         setIndicator(true)
-        let user = props.route.params.item;
 
         var reg = /^\d*(\.\d+)?$/;
         if (!(feilds[0].value.match(reg) && feilds[1].value.match(reg) && feilds[2].value.match(reg) && feilds[3].value.match(reg))) {
@@ -226,11 +246,13 @@ function AdminUserDashboard(props) {
             return;
         }
 
+        let user = props.route.params.item;
+
         const userDetail = {
-            totalTip: feilds[0].value,
-            pendingClearance: feilds[1].value,
-            sentToPayoneer: feilds[2].value,
-            availableInAccount: feilds[3].value,
+            totalTip: feilds[0].value ? feilds[0].value : 0,
+            pendingClearance: feilds[1].value ? feilds[1].value : 0,
+            sentToPayoneer: feilds[2].value ? feilds[2].value : 0,
+            availableInAccount: feilds[3].value ? feilds[3].value : 0,
             email: user.email,
             password: user.password,
         }
@@ -238,6 +260,7 @@ function AdminUserDashboard(props) {
         try {
             await updateUser(user.docId, userDetail);
             await handleUserEarning()
+            props.navigation.navigate('AdminEmployees')
         } catch (error) {
             console.log("user Update: ", error)
         }
